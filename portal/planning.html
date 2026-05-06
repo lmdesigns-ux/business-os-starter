@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Planning — Business OS</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <script src="data/portal-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/shell-init.js"></script>
+  <style>
+    .plan-intro {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-top: 3px solid var(--layer-knowledge);
+      padding: var(--sp-5) var(--sp-6);
+      margin-bottom: var(--sp-6);
+    }
+    .plan-intro .period {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: var(--sp-2);
+    }
+    .plan-intro .north {
+      font-size: 1.0625rem;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+    .plan-months {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-8);
+    }
+    @media (max-width: 900px) { .plan-months { grid-template-columns: 1fr; } }
+
+    .plan-col {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-top: 3px solid var(--accent);
+      padding: var(--sp-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+    .plan-col h2 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--ink);
+    }
+    .plan-col .month-goal {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin: 0;
+    }
+    .milestone-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+    .milestone-list li {
+      font-size: 0.8125rem;
+      line-height: 1.45;
+      padding-left: var(--sp-5);
+      position: relative;
+      color: var(--text);
+    }
+    .milestone-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.35em;
+      width: 0.65rem;
+      height: 0.65rem;
+      border: 2px solid var(--ink);
+      border-radius: 2px;
+      background: var(--surface);
+    }
+    .milestone-list li.done::before {
+      background: var(--layer-decisions);
+      border-color: var(--layer-decisions);
+    }
+    .milestone-list li .meta {
+      display: block;
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-family: var(--font-mono);
+    }
+
+    .plan-secondary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-4);
+    }
+    @media (max-width: 700px) { .plan-secondary { grid-template-columns: 1fr; } }
+
+    .plan-panel {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      padding: var(--sp-5);
+    }
+    .plan-panel h3 {
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 var(--sp-3);
+    }
+    .plan-panel ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--text);
+    }
+    .plan-empty {
+      text-align: center;
+      padding: var(--sp-8);
+      border: 2px dashed var(--border-light);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    .plan-empty code {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      background: var(--bg-alt);
+      padding: 2px 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <nav id="site-nav" class="site-nav" aria-label="Main navigation"></nav>
+  <div class="app-main">
+    <div class="app-top-bar">
+      <button type="button" id="nav-toggle" class="nav-drawer-toggle" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-drawer-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <span class="top-bar-title">Planning</span>
+    </div>
+    <button type="button" id="nav-overlay" class="app-overlay" hidden aria-label="Close menu"></button>
+    <main class="page" id="main-content">
+
+      <div class="page-header">
+        <h1>90-day planning</h1>
+        <p class="tagline">Layer 1: <code style="font-size:0.85rem;">inputs/90-day-plan.md</code> · Layer 2: <code style="font-size:0.85rem;">node skills/sync-plan.js</code> · Layer 3: this page.</p>
+      </div>
+
+      <div id="plan-root"></div>
+
+      <footer class="site-footer">
+        <p><span id="footer-brand">Your Business</span> · Planning · <span id="footer-date"></span></p>
+      </footer>
+    </main>
+  </div>
+</div>
+<script src="js/site-nav.js"></script>
+<script>
+(function () {
+  function esc(s) {
+    if (s == null || s === '') return '';
+    var el = document.createElement('span');
+    el.textContent = String(s);
+    return el.innerHTML;
+  }
+
+  function stripMdBold(s) {
+    return String(s || '').replace(/\*\*/g, '');
+  }
+
+  var D = window.PortalData;
+  var site = D.site || {};
+  document.getElementById('footer-brand').textContent = site.name || 'Your Business';
+  document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  var root = document.getElementById('plan-root');
+  var plan = D && D.plan;
+
+  if (!plan || (!plan.northStar && (!plan.months || !plan.months.length))) {
+    root.innerHTML = '<div class="plan-empty"><p>No compiled plan yet.</p><p>Add <code>inputs/90-day-plan.md</code>, then run <code>node skills/sync-plan.js</code>.</p></div>';
+    return;
+  }
+
+  var intro = '<div class="plan-intro">'
+    + '<div class="period">' + esc(plan.period || '') + (plan.updated ? ' · Updated ' + esc(plan.updated) : '') + '</div>'
+    + '<div class="north"><strong>North star:</strong> ' + esc(stripMdBold(plan.northStar)) + '</div>'
+    + '</div>';
+
+  var monthsHtml = '<div class="plan-months">';
+  (plan.months || []).forEach(function (mo) {
+    monthsHtml += '<section class="plan-col">';
+    monthsHtml += '<h2>Month ' + esc(mo.monthNum) + ' — ' + esc(mo.monthLabel) + '</h2>';
+    monthsHtml += '<p class="month-goal">' + esc(stripMdBold(mo.goal)) + '</p>';
+    monthsHtml += '<ul class="milestone-list">';
+    (mo.milestones || []).forEach(function (ms) {
+      monthsHtml += '<li class="' + (ms.done ? 'done' : '') + '">' + esc(stripMdBold(ms.text));
+      if (ms.owner || ms.due) {
+        monthsHtml += '<span class="meta">' + esc(ms.owner || '') + (ms.owner && ms.due ? ' · ' : '') + esc(ms.due || '') + '</span>';
+      }
+      monthsHtml += '</li>';
+    });
+    monthsHtml += '</ul></section>';
+  });
+  monthsHtml += '</div>';
+
+  var betsList = (plan.bets || []).map(function (b) { return '<li>' + esc(stripMdBold(b)) + '</li>'; }).join('');
+  var risksList = (plan.risks || []).map(function (r) { return '<li>' + esc(stripMdBold(r)) + '</li>'; }).join('');
+
+  var secondary = '<div class="plan-secondary">'
+    + '<div class="plan-panel"><h3>Bets</h3><ul>' + (betsList || '<li>—</li>') + '</ul></div>'
+    + '<div class="plan-panel"><h3>Risks</h3><ul>' + (risksList || '<li>—</li>') + '</ul></div>'
+    + '</div>';
+
+  root.innerHTML = intro + monthsHtml + secondary;
+})();
+</script>
+</body>
+</html>

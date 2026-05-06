@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Business OS — Workshop Handout · Technical.ly Builders 2026</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Page ── 11x17 landscape ── */
+    @page {
+      size: 17in 11in landscape;
+      margin: 0;
+    }
+
+    :root {
+      --ink: #000;
+      --paper: #fff;
+      --rule: #000;
+      --muted: #555;
+      --amber: #C97400;       /* print-safe amber, darker than slide deck */
+      --teal:  #0E7A6F;
+      --green: #1F6E47;
+      --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #e9e7e2;
+      font-family: var(--font-sans);
+      color: var(--ink);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* The sheet itself */
+    .sheet {
+      width: 17in;
+      height: 11in;
+      background: var(--paper);
+      position: relative;
+      overflow: hidden;
+      margin: 0.5in auto;
+      box-shadow: 0 2px 18px rgba(0,0,0,0.12);
+    }
+
+    @media print {
+      html, body { background: var(--paper); }
+      .sheet { margin: 0; box-shadow: none; }
+    }
+
+    /* ── Vertical edge label (left margin) ── */
+    .edge-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0.45in;
+      height: 11in;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: column;
+      padding: 0.45in 0;
+      font-size: 9pt;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+    .edge-label .edge-text {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      text-align: center;
+    }
+    .edge-label .edge-meta {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-weight: 400;
+      font-family: var(--font-mono);
+      font-size: 7.5pt;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+    }
+
+    /* ── Three-column layout ── */
+    .grid {
+      position: absolute;
+      top: 0;
+      left: 0.45in;
+      right: 0;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: 6.0in 5.6in 4.95in;
+    }
+
+    .col {
+      padding: 0.45in 0.42in 0.75in;
+      position: relative;
+    }
+    .col + .col {
+      border-left: 1px solid var(--rule);
+    }
+
+    /* ── Typography ── */
+    .display {
+      font-size: 36pt;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      margin: 0;
+    }
+    .display .amber-ink { color: var(--amber); }
+
+    .subtitle {
+      font-size: 11.5pt;
+      font-weight: 500;
+      line-height: 1.35;
+      margin: 0.25rem 0 0;
+      max-width: 5.2in;
+    }
+
+    .session-line {
+      font-family: var(--font-mono);
+      font-size: 8.5pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 0.55rem;
+    }
+
+    .label {
+      font-size: 9.5pt;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin: 0 0 0.5rem;
+    }
+
+    .label-sm {
+      font-size: 8pt;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 0.35rem;
+    }
+
+    .body {
+      font-size: 10.5pt;
+      line-height: 1.45;
+      margin: 0 0 0.4rem;
+    }
+
+    .body-sm {
+      font-size: 9.5pt;
+      line-height: 1.4;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* ── Dotted divider ── */
+    .dotted {
+      border: 0;
+      border-top: 1.5px dotted var(--ink);
+      margin: 0.6rem 0;
+    }
+
+    /* ── 3-Layer reference block (three column cards) ── */
+    .layers {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.38rem;
+      margin: 0.4rem 0 0;
+      align-items: stretch;
+    }
+    .layer-card-ref {
+      border: 1.25px solid var(--ink);
+      padding: 0.38rem 0.4rem 0.42rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.32rem;
+      min-width: 0;
+    }
+    .layer-card-ref .layer-tag {
+      align-self: flex-start;
+    }
+    .layer-card-ref .layer-desc {
+      margin: 0;
+      font-size: 9pt;
+      line-height: 1.38;
+    }
+    .layer-tag {
+      font-family: var(--font-mono);
+      font-size: 9pt;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border: 1.25px solid var(--ink);
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .layer-tag.amber { color: var(--amber); border-color: var(--amber); }
+    .layer-tag.teal  { color: var(--teal);  border-color: var(--teal);  }
+    .layer-tag.green { color: var(--green); border-color: var(--green); }
+    .layer-desc {
+      font-size: 10pt;
+      line-height: 1.4;
+    }
+
+    /* ── Layer mini-map (worksheet) — three column cards ── */
+    .layer-map {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.38rem;
+      margin: 0.3rem 0 0;
+      align-items: stretch;
+    }
+    .layer-card-map {
+      border: 1.25px solid var(--ink);
+      padding: 0.34rem 0.38rem 0.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.28rem;
+      min-width: 0;
+    }
+    .layer-card-map .layer-tag {
+      align-self: flex-start;
+    }
+    .layer-card-map .body-sm {
+      font-size: 8.75pt;
+      line-height: 1.32;
+    }
+    .layer-card-map .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      min-width: 0;
+      margin-top: 0.05rem;
+    }
+    .layer-card-map .stack .line {
+      border-bottom: 1px solid var(--ink);
+      height: 0.95rem;
+      display: block;
+      width: 100%;
+    }
+
+    /* ── Exercise ── */
+    .exercise-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .exercise-header .timer {
+      font-family: var(--font-mono);
+      font-size: 9pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .exercise-block {
+      margin: 0.4rem 0 0;
+    }
+    .exercise-block .q {
+      font-size: 10pt;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 0 0 0.3rem;
+    }
+    .exercise-block .hint {
+      font-size: 9pt;
+      color: var(--muted);
+      margin: 0 0 0.4rem;
+      line-height: 1.35;
+    }
+    .blank-lines {
+      list-style: none;
+      counter-reset: blanks;
+      padding: 0;
+      margin: 0.2rem 0 0;
+    }
+    .blank-lines li {
+      counter-increment: blanks;
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      padding: 0.35rem 0 0.05rem;
+    }
+    .blank-lines li::before {
+      content: counter(blanks) ".";
+      font-family: var(--font-mono);
+      font-size: 9pt;
+      font-weight: 600;
+      width: 0.85rem;
+      flex-shrink: 0;
+    }
+    .blank-lines li .line {
+      flex: 1;
+      border-bottom: 1px solid var(--ink);
+      height: 0.85rem;
+    }
+
+    .madlib {
+      font-size: 11pt;
+      line-height: 2;
+      margin: 0.3rem 0 0;
+    }
+    .madlib .blank {
+      display: inline-block;
+      min-width: 1.6in;
+      border-bottom: 1px solid var(--ink);
+      height: 1.1em;
+      vertical-align: bottom;
+    }
+    .madlib .blank.short { min-width: 1.1in; }
+    .madlib .blank.long  { min-width: 2.1in; }
+
+    /* ── Notes column ── */
+    .notes-wrap {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+    .notes-box {
+      flex: 1;
+      min-height: 4in;
+      border: 1.5px solid var(--ink);
+      border-radius: 14px;
+      margin-top: 0.4rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--paper);
+    }
+    .notes-guide {
+      flex-shrink: 0;
+      padding: 0.28in 0.36in 0.26in;
+      border-bottom: 1px dotted rgba(0, 0, 0, 0.18);
+      display: flex;
+      flex-direction: column;
+    }
+    .notes-guide .guide-item {
+      padding: 0.18rem 0 0.22rem 0.34rem;
+      border-left: 2px solid rgba(14, 122, 111, 0.28);
+    }
+    .notes-guide .guide-item + .guide-item {
+      margin-top: 0.12rem;
+      padding-top: 0.24rem;
+      border-top: 1px dotted rgba(0, 0, 0, 0.12);
+    }
+    .notes-guide .guide-title {
+      font-size: 8pt;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: rgba(0, 0, 0, 0.5);
+      margin: 0 0 0.1rem;
+    }
+    .notes-guide .guide-hint {
+      font-family: var(--font-sans);
+      font-size: 8.25pt;
+      font-weight: 400;
+      line-height: 1.32;
+      color: var(--muted);
+      margin: 0;
+      opacity: 0.95;
+    }
+    .notes-ruled {
+      flex: 1;
+      min-height: 2.4in;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 0.42in,
+          rgba(0, 0, 0, 0.08) 0.42in,
+          rgba(0, 0, 0, 0.08) calc(0.42in + 0.5px)
+        );
+    }
+
+    /* ── Checklist column ── */
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0.3rem 0 0;
+    }
+    .checklist li {
+      display: grid;
+      grid-template-columns: 1.05rem 1fr;
+      gap: 0.55rem;
+      padding: 0.32rem 0;
+      align-items: flex-start;
+      font-size: 10pt;
+      line-height: 1.35;
+    }
+    .checklist li::before {
+      content: "";
+      display: inline-block;
+      width: 0.78rem;
+      height: 0.78rem;
+      border: 1.5px solid var(--ink);
+      margin-top: 2px;
+    }
+
+    .next-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0.3rem 0 0;
+    }
+    .next-steps li {
+      display: grid;
+      grid-template-columns: 1.55rem 1fr;
+      gap: 0.55rem;
+      padding: 0.3rem 0;
+      font-size: 10pt;
+      line-height: 1.35;
+      border-top: 1px dotted var(--ink);
+    }
+    .next-steps li:first-child { border-top: none; }
+    .next-steps li .day {
+      font-family: var(--font-mono);
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      padding-top: 1px;
+    }
+
+    /* ── FigJam strip (column 1) ── */
+    .figjam-scan {
+      display: flex;
+      align-items: center;
+      gap: 0.28in;
+      margin: 0.38rem 0 0.05rem;
+      max-width: 5.6in;
+    }
+    .figjam-scan .figjam-copy {
+      min-width: 0;
+    }
+    .qr-placeholder.qr-compact {
+      width: auto;
+      padding: 0.06in;
+      flex-shrink: 0;
+    }
+    .qr-placeholder.qr-compact img {
+      width: 0.82in;
+      height: 0.82in;
+    }
+
+    /* ── Resources / QR row ── */
+    .resources {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.45rem;
+      margin-top: 0.4rem;
+    }
+    .resources.resources--three {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.35rem;
+    }
+    .resources.resources--three .resource-card {
+      padding: 0.32rem 0.28rem;
+    }
+    .resources.resources--three .qr-placeholder img {
+      width: 0.88in;
+      height: 0.88in;
+    }
+    .resources.resources--three .url {
+      font-size: 7.25pt;
+    }
+    .resource-card {
+      border: 1.25px solid var(--ink);
+      padding: 0.4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      text-align: center;
+    }
+    .qr-placeholder {
+      width: 1.24in;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 0.08in;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.03);
+    }
+    /* Match slide deck: case study / inputs tint vs starter / alternate */
+    .qr-placeholder.qr-accent-amber {
+      border: 1.75pt solid var(--amber);
+      background: rgba(201, 116, 0, 0.06);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+    .qr-placeholder.qr-accent-teal {
+      border: 1.75pt solid var(--teal);
+      background: rgba(14, 122, 111, 0.06);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+    .qr-placeholder img {
+      width: 1.02in;
+      height: 1.02in;
+      display: block;
+      border: 1px solid var(--ink);
+      border-radius: 4px;
+      background: #fff;
+    }
+    .qr-placeholder .qr-tag {
+      font-family: var(--font-mono);
+      font-size: 6.25pt;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .qr-accent-amber .qr-tag { color: var(--amber); }
+    .qr-accent-teal .qr-tag { color: var(--teal); }
+    .qr-placeholder.qr-accent-green {
+      border: 1.75pt solid var(--green);
+      background: rgba(31, 110, 71, 0.06);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+    .qr-accent-green .qr-tag { color: var(--green); }
+    .resource-card .label-sm { margin: 0; }
+    .resource-card .url {
+      font-family: var(--font-mono);
+      font-size: 8.5pt;
+      font-weight: 500;
+      word-break: break-all;
+      line-height: 1.25;
+    }
+
+    /* ── Closing statement ── */
+    .closer {
+      margin-top: 0.55rem;
+      padding-top: 0.55rem;
+      border-top: 1.5px solid var(--ink);
+    }
+    .closer p {
+      font-size: 13pt;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .closer p .underline { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── Column footers / utility ── */
+    .col-footer {
+      position: absolute;
+      bottom: 0.42in;
+      left: 0.42in;
+      right: 0.42in;
+      font-family: var(--font-mono);
+      font-size: 7.5pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Fit content to the page (avoid scrolling) */
+    .col {
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <!-- Vertical edge label -->
+  <div class="edge-label">
+    <div class="edge-text">Business OS · Workshop Handout</div>
+    <div class="edge-meta">v1 · 05.2026</div>
+  </div>
+
+  <div class="grid">
+
+    <!-- ════════════════ COLUMN 1 — REFERENCE + EXERCISE ════════════════ -->
+    <section class="col">
+
+      <p class="session-line">Technical.ly Builders · May 8, 2026 · Philadelphia</p>
+      <h1 class="display">Business<br><span class="amber-ink">OS</span></h1>
+      <p class="subtitle">Make your scattered business knowledge compound &mdash; built with markdown, vanilla JS, and AI.</p>
+
+      <div class="figjam-scan">
+        <div class="qr-placeholder qr-accent-teal qr-compact">
+          <img src="../slides/assets/qr-figjam.svg" width="79" height="79" loading="eager" decoding="async" alt="QR code for FigJam workshop board">
+          <span class="qr-tag">FigJam</span>
+        </div>
+        <div class="figjam-copy">
+          <p class="label-sm" style="margin:0 0 0.15rem;">Workshop board</p>
+          <p class="body-sm" style="margin:0;line-height:1.35;">Scan to open the live FigJam. Regenerate <code style="font-family:var(--font-mono);font-size:8pt;">qr-figjam.svg</code> when your session share link is final.</p>
+        </div>
+      </div>
+
+      <hr class="dotted">
+
+      <p class="label">The 3-Layer Model</p>
+      <div class="layers">
+        <div class="layer-card-ref">
+          <span class="layer-tag amber">L1 · Inputs</span>
+          <p class="layer-desc">CRM notes, financials, SOPs, brand &mdash; what you already have, scattered across tools.</p>
+        </div>
+        <div class="layer-card-ref">
+          <span class="layer-tag teal">L2 · Knowledge</span>
+          <p class="layer-desc">Markdown as source of truth. AI maintains structure. The layer most teams skip.</p>
+        </div>
+        <div class="layer-card-ref">
+          <span class="layer-tag green">L3 · Decisions</span>
+          <p class="layer-desc">Dashboard, pipeline, finance views &mdash; static pages compiled from your knowledge.</p>
+        </div>
+      </div>
+
+      <hr class="dotted">
+
+      <div class="exercise-header">
+        <p class="label" style="margin:0;">Your Business OS Sketch</p>
+        <span class="timer">15 min</span>
+      </div>
+
+      <p class="label-sm" style="margin-top:0.35rem;">Tell the agent about your business</p>
+
+      <div class="exercise-block" style="margin-top:0.35rem;">
+        <p class="q">1 &mdash; What you do</p>
+        <p class="hint">One sentence: who you serve + what you do for them.</p>
+        <p class="madlib">
+          I help <span class="blank"></span> do <span class="blank long"></span><br>
+          so they can <span class="blank long"></span>.
+        </p>
+      </div>
+
+      <div class="exercise-block">
+        <p class="q">2 &mdash; How you make money</p>
+        <p class="hint">Primary revenue streams (1&ndash;3).</p>
+        <ol class="blank-lines">
+          <li><span class="line"></span></li>
+          <li><span class="line"></span></li>
+          <li><span class="line"></span></li>
+        </ol>
+      </div>
+
+      <div class="exercise-block">
+        <p class="q">3 &mdash; Top goal &mdash; next 90 days</p>
+        <p class="hint">One outcome that, if hit, would matter most.</p>
+        <ol class="blank-lines">
+          <li><span class="line"></span></li>
+          <li><span class="line"></span></li>
+        </ol>
+      </div>
+
+      <p class="label-sm" style="margin-top:0.35rem;">Map it to the 3 layers</p>
+
+      <div class="layer-map">
+        <div class="layer-card-map">
+          <span class="layer-tag amber">L1 · Inputs</span>
+          <p class="body-sm" style="margin:0;">Where does this knowledge live today?</p>
+          <div class="stack">
+            <span class="line"></span>
+            <span class="line"></span>
+          </div>
+        </div>
+        <div class="layer-card-map">
+          <span class="layer-tag teal">L2 · Knowledge</span>
+          <p class="body-sm" style="margin:0;">What&rsquo;s your single source of truth? Name the artifact you&rsquo;d actually maintain (Google Doc, sheets, Notion page).</p>
+          <div class="stack">
+            <span class="line"></span>
+          </div>
+        </div>
+        <div class="layer-card-map">
+          <span class="layer-tag green">L3 · Decisions</span>
+          <p class="body-sm" style="margin:0;">What view do you want first? (one decision that gets faster)</p>
+          <div class="stack">
+            <span class="line"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-footer">
+        <span>01 / Reference + Exercise</span>
+        <span>buss-os.luiscielak.com</span>
+      </div>
+    </section>
+
+    <!-- ════════════════════════ COLUMN 2 — NOTES ════════════════════════ -->
+    <section class="col">
+      <div class="notes-wrap">
+        <p class="label" style="margin:0;">Notes</p>
+        <p class="body-sm" style="margin-top:0.15rem;">Capture what hits in the ruled area. The quiet strip at the top maps to your next <code style="font-family:var(--font-mono);font-size:8.5pt;">90-day plan</code> prompt &mdash; optional, not graded.</p>
+
+        <div class="notes-box">
+          <div class="notes-guide">
+            <div class="guide-item">
+              <p class="guide-title">Three milestones</p>
+              <p class="guide-hint">One per month that gets you to your top goal.</p>
+            </div>
+            <div class="guide-item">
+              <p class="guide-title">Bets I&rsquo;d test</p>
+              <p class="guide-hint">1&ndash;3 things that might not work but would unlock a lot.</p>
+            </div>
+            <div class="guide-item">
+              <p class="guide-title">Risks / blockers</p>
+              <p class="guide-hint">What could derail this &mdash; and how you&rsquo;d mitigate.</p>
+            </div>
+          </div>
+          <div class="notes-ruled" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="col-footer">
+        <span>02 / Notes</span>
+        <span></span>
+      </div>
+    </section>
+
+    <!-- ═══════════════ COLUMN 3 — CHECKLIST + NEXT + RESOURCES ═══════════════ -->
+    <section class="col">
+
+      <p class="label">Build Your Business OS <span style="font-weight:400;color:var(--muted);font-size:8.5pt;letter-spacing:0.1em;">(in order)</span></p>
+      <ul class="checklist">
+        <li>List your 3 most scattered knowledge sources</li>
+        <li>Pick ONE decision view to build first</li>
+        <li>Fork the starter repo</li>
+        <li>Install Cursor (if you haven't yet)</li>
+        <li>In Cursor chat, type <code style="font-family:var(--font-mono);font-size:9pt;">new-os</code> &rarr; onboarding + dashboard setup (<code style="font-family:var(--font-mono);font-size:9pt;">AGENTS.md</code>)</li>
+        <li>Build your first portal page</li>
+        <li>Share it with one person</li>
+      </ul>
+
+      <hr class="dotted">
+
+      <p class="label">Your Next 7 Days</p>
+      <ul class="next-steps">
+        <li><span class="day">D 1&ndash;2</span><span>Fork the starter, set up local dev, open it in Cursor</span></li>
+        <li><span class="day">D 3&ndash;4</span><span>Type <code style="font-family:var(--font-mono);font-size:9pt;">new-os</code> to onboard; then <code style="font-family:var(--font-mono);font-size:9pt;">90-day plan</code> for planning</span></li>
+        <li><span class="day">D 5&ndash;6</span><span>Build your first decision view from real inputs</span></li>
+        <li><span class="day">D 7</span><span>Ship it. Share with one teammate or peer.</span></li>
+      </ul>
+
+      <hr class="dotted">
+
+      <p class="label">Scan</p>
+      <div class="resources resources--three">
+        <div class="resource-card">
+          <div class="qr-placeholder qr-accent-amber">
+            <img src="../slides/assets/qr-case-study.svg" width="101" height="101" loading="eager" decoding="async" alt="QR code for https://buss-os.luiscielak.com">
+            <span class="qr-tag">Case Study</span>
+          </div>
+          <p class="label-sm">Case study</p>
+          <p class="url">buss-os.luiscielak.com</p>
+        </div>
+
+        <div class="resource-card">
+          <div class="qr-placeholder qr-accent-teal">
+            <img src="../slides/assets/qr-starter-repo.svg" width="101" height="101" loading="eager" decoding="async" alt="QR code for https://github.com/luiscielak/business-os-starter">
+            <span class="qr-tag">Starter Repo</span>
+          </div>
+          <p class="label-sm">Starter repo</p>
+          <p class="url">github.com/luiscielak/<br>business-os-starter</p>
+        </div>
+
+        <div class="resource-card">
+          <div class="qr-placeholder qr-accent-green">
+            <img src="../slides/assets/qr-demo-portal.svg" width="101" height="101" loading="eager" decoding="async" alt="QR code for https://demo-os.luiscielak.com">
+            <span class="qr-tag">Demo Portal</span>
+          </div>
+          <p class="label-sm">YCC demo</p>
+          <p class="url">demo-os.luiscielak.com</p>
+        </div>
+      </div>
+
+      <div class="closer">
+        <p>Your knowledge is already there.<br><span class="underline">Build the layer that makes it compound.</span></p>
+      </div>
+
+      <div class="col-footer">
+        <span>03 / Checklist + Next</span>
+        <span>luiscielak.com</span>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+</body>
+</html>

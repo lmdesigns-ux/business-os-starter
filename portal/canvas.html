@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Canvas — Business OS</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <script src="data/portal-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/shell-init.js"></script>
+  <style>
+    .bmc-wrap { max-width: 100%; }
+    .bmc-header {
+      margin-bottom: var(--sp-8);
+      padding-bottom: var(--sp-6);
+      border-bottom: 2px solid var(--ink);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: var(--sp-4);
+    }
+    .bmc-header h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+    .bmc-header h1 span { color: var(--accent); }
+    .bmc-meta { font-size: 0.8125rem; color: var(--text-muted); text-align: right; }
+    .bmc-meta strong { display: block; font-size: 1rem; color: var(--ink); margin-bottom: 2px; }
+
+    .bmc-empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      border: 2px dashed var(--border-light);
+      background: var(--surface);
+    }
+    .bmc-empty h2 { font-size: 1.25rem; margin-bottom: var(--sp-3); color: var(--ink); }
+    .bmc-empty p  { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; max-width: 32rem; margin: 0 auto var(--sp-4); }
+    .bmc-empty code { font-family: var(--font-mono); font-size: 0.875rem; background: var(--accent-light); padding: 2px 6px; }
+
+    .bmc-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(3, auto);
+      gap: 0;
+      border: 2px solid var(--ink);
+    }
+    .bmc-cell {
+      border: 1px solid var(--border-light);
+      padding: var(--sp-4);
+      background: var(--surface);
+      min-height: 10rem;
+    }
+    .bmc-cell.span-2  { grid-column: span 2; }
+    .bmc-cell.span-5  { grid-column: span 5; min-height: 7rem; }
+    .bmc-cell.layer-inputs    { border-top: 3px solid var(--layer-inputs); }
+    .bmc-cell.layer-knowledge { border-top: 3px solid var(--layer-knowledge); }
+    .bmc-cell.layer-decisions { border-top: 3px solid var(--layer-decisions); }
+    .bmc-cell .cell-label {
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: var(--sp-3);
+    }
+    .bmc-cell .cell-content { font-size: 0.8125rem; line-height: 1.55; color: var(--text); }
+    .bmc-cell .cell-content ul { list-style: none; padding: 0; }
+    .bmc-cell .cell-content li {
+      padding: 2px 0 2px var(--sp-3);
+      position: relative;
+    }
+    .bmc-cell .cell-content li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+    }
+    .bmc-footer {
+      margin-top: var(--sp-8);
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--border-light);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+    }
+    .bmc-footer a { color: var(--accent); }
+    @media print {
+      body .page { padding-top: 0; }
+      .bmc-cell { min-height: 6rem !important; }
+      .bmc-footer { display: none; }
+    }
+    @media (max-width: 900px) {
+      .bmc-grid { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
+      .bmc-cell, .bmc-cell.span-2, .bmc-cell.span-5 {
+        grid-column: span 1;
+        min-height: 7rem;
+      }
+    }
+    @media (max-width: 540px) {
+      .bmc-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <nav id="site-nav" class="site-nav" aria-label="Main navigation"></nav>
+  <div class="app-main">
+    <div class="app-top-bar">
+      <button type="button" id="nav-toggle" class="nav-drawer-toggle" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-drawer-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <span class="top-bar-title">Canvas</span>
+    </div>
+    <button type="button" id="nav-overlay" class="app-overlay" hidden aria-label="Close menu"></button>
+    <main class="page" id="main-content">
+      <div class="bmc-wrap">
+        <div class="bmc-header">
+          <h1>Business Model <span>Canvas</span></h1>
+          <div class="bmc-meta">
+            <strong id="bmc-name">—</strong>
+            <span id="bmc-date">—</span>
+          </div>
+        </div>
+
+        <div id="bmc-container">
+          <div class="bmc-empty">
+            <h2>No canvas yet</h2>
+            <p>Type <code>new-os</code> in your AI tool to onboard and answer the prompts, or add <code>inputs/business-model-canvas.md</code> manually.</p>
+            <p>Expected file: <code>inputs/business-model-canvas.md</code></p>
+          </div>
+        </div>
+
+        <div class="bmc-footer">
+          <span>Business OS · Starter Kit</span>
+          <span>Based on the Business Model Canvas by Alexander Osterwalder · <a href="https://strategyzer.com" target="_blank" rel="noopener">Strategyzer</a></span>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="js/site-nav.js"></script>
+<script>
+(function () {
+  var MD_PATH = '../inputs/business-model-canvas.md';
+
+  var BLOCKS = [
+    { key: 'Key Partners',        label: 'Key Partners',        cls: 'span-2 layer-inputs' },
+    { key: 'Key Activities',      label: 'Key Activities',      cls: 'span-2 layer-knowledge' },
+    { key: 'Value Propositions',  label: 'Value Propositions',  cls: 'span-2 layer-knowledge' },
+    { key: 'Customer Relationships', label: 'Customer Relationships', cls: 'span-2 layer-decisions' },
+    { key: 'Customer Segments',   label: 'Customer Segments',   cls: 'span-2 layer-decisions' },
+    { key: 'Key Resources',       label: 'Key Resources',       cls: 'span-2 layer-knowledge' },
+    { key: 'Channels',            label: 'Channels',            cls: 'span-2 layer-decisions' },
+    { key: 'Cost Structure',      label: 'Cost Structure',      cls: 'span-5 layer-inputs' },
+    { key: 'Revenue Streams',     label: 'Revenue Streams',     cls: 'span-5 layer-decisions' }
+  ];
+
+  function parseMd(text) {
+    var sections = {};
+    var currentKey = null;
+    var lines = text.split('\n');
+    lines.forEach(function (line) {
+      var h2 = line.match(/^##\s+(.+)$/);
+      if (h2) { currentKey = h2[1].trim(); sections[currentKey] = []; return; }
+      var h1 = line.match(/^#\s+(.+)$/);
+      if (h1) { sections['__title__'] = h1[1].trim(); return; }
+      var meta = line.match(/^\*\*Business:\*\*\s*(.+)$/);
+      if (meta) { sections['__business__'] = meta[1].trim(); return; }
+      var date = line.match(/^\*\*Date:\*\*\s*(.+)$/);
+      if (date) { sections['__date__'] = date[1].trim(); return; }
+      if (currentKey && line.trim()) {
+        var bullet = line.replace(/^[-*]\s+/, '').trim();
+        if (bullet) sections[currentKey].push(bullet);
+      }
+    });
+    return sections;
+  }
+
+  function renderBMC(sections) {
+    document.getElementById('bmc-name').textContent = sections['__business__'] || 'My Business';
+    document.getElementById('bmc-date').textContent = sections['__date__'] || '';
+
+    var grid = document.createElement('div');
+    grid.className = 'bmc-grid';
+
+    BLOCKS.forEach(function (b) {
+      var cell = document.createElement('div');
+      cell.className = 'bmc-cell ' + b.cls;
+      var items = sections[b.key] || [];
+      var listHtml = items.length
+        ? '<ul>' + items.map(function (i) { return '<li>' + i + '</li>'; }).join('') + '</ul>'
+        : '<em style="color:var(--text-muted);font-size:0.8rem;">—</em>';
+      cell.innerHTML = '<div class="cell-label">' + b.label + '</div><div class="cell-content">' + listHtml + '</div>';
+      grid.appendChild(cell);
+    });
+
+    var container = document.getElementById('bmc-container');
+    container.innerHTML = '';
+    container.appendChild(grid);
+  }
+
+  fetch(MD_PATH)
+    .then(function (r) {
+      if (!r.ok) throw new Error('not found');
+      return r.text();
+    })
+    .then(function (text) { renderBMC(parseMd(text)); })
+    .catch(function () { /* keep empty state */ });
+})();
+</script>
+</body>
+</html>

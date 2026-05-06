@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Finance — Yeast Coast Culture</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <script src="data/ycc-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/shell-init.js"></script>
+  <style>
+    /* ── Bar chart ── */
+    .bar-chart { display: flex; flex-direction: column; gap: var(--sp-2); }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 10rem 1fr 5rem;
+      align-items: center;
+      gap: var(--sp-3);
+      font-size: 0.8125rem;
+    }
+    .bar-label   { color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-track   { background: var(--border-light); height: 20px; }
+    .bar-fill    { height: 100%; background: var(--accent); transition: width 300ms ease; }
+    .bar-value   { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); text-align: right; }
+    .bar-row.is-active .bar-fill { background: var(--layer-decisions); }
+    .bar-row.is-active .bar-label { color: var(--ink); font-weight: 600; }
+
+    /* ── Pricing emulator ── */
+    .emulator {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-top: 2px solid var(--ink);
+      padding: var(--sp-6);
+    }
+    .emulator h3 { margin-bottom: var(--sp-4); }
+    .emulator-controls { display: flex; flex-direction: column; gap: var(--sp-4); }
+    .control-row { display: grid; grid-template-columns: 10rem 1fr 4rem; align-items: center; gap: var(--sp-3); }
+    .control-label { font-size: 0.875rem; color: var(--text-muted); }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .control-value {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--ink);
+      text-align: right;
+      font-weight: 600;
+    }
+    .emulator-output {
+      margin-top: var(--sp-6);
+      padding-top: var(--sp-6);
+      border-top: 1px solid var(--border-light);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-4);
+    }
+    .output-item .output-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--sp-1); }
+    .output-item .output-value { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--ink); }
+
+    @media (max-width: 640px) {
+      .bar-row { grid-template-columns: 6rem 1fr 4rem; }
+      .control-row { grid-template-columns: 7rem 1fr 3.5rem; }
+      .emulator-output { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <nav id="site-nav" class="site-nav" aria-label="Main navigation"></nav>
+  <div class="app-main">
+    <div class="app-top-bar">
+      <button type="button" id="nav-toggle" class="nav-drawer-toggle" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-drawer-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <span class="top-bar-title">Finance</span>
+    </div>
+    <button type="button" id="nav-overlay" class="app-overlay" hidden aria-label="Close menu"></button>
+    <main class="page" id="main-content">
+
+      <div class="page-header">
+        <h1>Finance</h1>
+        <p class="tagline">Revenue by production run · Jan–Apr 2026. Pricing emulator below.</p>
+        <div class="meta-row" id="finance-meta">
+          <span><strong>YTD Revenue:</strong> —</span>
+          <span>—</span>
+        </div>
+      </div>
+
+      <!-- Bar Chart -->
+      <div class="section-label"><span class="micro-label">Revenue by Run</span></div>
+      <div class="module" style="padding:var(--sp-6);">
+        <div class="bar-chart" id="bar-chart"></div>
+      </div>
+
+      <!-- Revenue Table -->
+      <div class="section-label"><span class="micro-label">Run Detail</span></div>
+      <div class="table-scroll">
+        <table class="data-table" id="revenue-table">
+          <thead>
+            <tr>
+              <th>Run</th>
+              <th>Product</th>
+              <th>Cases</th>
+              <th>Revenue</th>
+              <th>$/case</th>
+            </tr>
+          </thead>
+          <tbody id="revenue-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Pricing Emulator -->
+      <div class="section-label"><span class="micro-label">Pricing Emulator</span></div>
+      <div class="emulator">
+        <h3>Run Pricing Calculator</h3>
+        <div class="emulator-controls">
+          <div class="control-row">
+            <span class="control-label">Case count</span>
+            <input type="range" id="units-input" min="40" max="600" value="200" step="10">
+            <span class="control-value" id="units-display">200</span>
+          </div>
+          <div class="control-row">
+            <span class="control-label">Price per case ($)</span>
+            <input type="range" id="price-input" min="15" max="90" value="35" step="1">
+            <span class="control-value" id="price-display">$35</span>
+          </div>
+          <div class="control-row">
+            <span class="control-label">COGS per case ($)</span>
+            <input type="range" id="cogs-input" min="5" max="45" value="14" step="1">
+            <span class="control-value" id="cogs-display">$14</span>
+          </div>
+        </div>
+        <div class="emulator-output">
+          <div class="output-item">
+            <div class="output-label">Gross Revenue</div>
+            <div class="output-value" id="out-revenue">$7,000</div>
+          </div>
+          <div class="output-item">
+            <div class="output-label">COGS</div>
+            <div class="output-value" id="out-cogs">$2,800</div>
+          </div>
+          <div class="output-item">
+            <div class="output-label">Gross Margin</div>
+            <div class="output-value" id="out-margin">60%</div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <p>Yeast Coast Culture · Finance · All figures are fictional demo data.</p>
+      </footer>
+    </main>
+  </div>
+</div>
+<script src="js/site-nav.js"></script>
+<script>
+(function () {
+  var D = window.PortalData;
+  var rev = D.revenue;
+  var maxRev = Math.max.apply(null, rev.map(function (r) { return r.revenue; }));
+
+  var ytd = rev.reduce(function (sum, r) { return sum + r.revenue; }, 0);
+  var totalUnits = rev.reduce(function (sum, r) { return sum + r.units; }, 0);
+  document.getElementById('finance-meta').innerHTML =
+    '<span><strong>YTD Revenue:</strong> $' + ytd.toLocaleString() + '</span>'
+    + '<span>' + rev.length + ' runs · ' + totalUnits.toLocaleString() + ' cases</span>';
+
+  /* ── Bar chart ── */
+  var chart = document.getElementById('bar-chart');
+  chart.innerHTML = rev.map(function (r, i) {
+    var pct = Math.round((r.revenue / maxRev) * 100);
+    var isActive = i === rev.length - 1;
+    return '<div class="bar-row' + (isActive ? ' is-active' : '') + '">'
+      + '<span class="bar-label" title="' + r.batch + '">' + r.batch + '</span>'
+      + '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div>'
+      + '<span class="bar-value">$' + (r.revenue / 1000).toFixed(1) + 'k</span>'
+      + '</div>';
+  }).join('');
+
+  /* ── Revenue table ── */
+  var tbody = document.getElementById('revenue-body');
+  tbody.innerHTML = rev.map(function (r) {
+    var perUnit = Math.round(r.revenue / r.units);
+    return '<tr>'
+      + '<td class="mono">' + r.batch + '</td>'
+      + '<td>' + r.product + '</td>'
+      + '<td class="mono">' + r.units.toLocaleString() + '</td>'
+      + '<td class="mono">$' + r.revenue.toLocaleString() + '</td>'
+      + '<td class="mono">$' + perUnit + '</td>'
+      + '</tr>';
+  }).join('');
+
+  /* ── Pricing emulator ── */
+  var inputs = {
+    units: document.getElementById('units-input'),
+    price: document.getElementById('price-input'),
+    cogs:  document.getElementById('cogs-input')
+  };
+  function updateEmulator() {
+    var n     = parseInt(inputs.units.value, 10);
+    var price = parseInt(inputs.price.value, 10);
+    var cogs  = parseInt(inputs.cogs.value, 10);
+    var revenue = n * price;
+    var total_cogs = n * cogs;
+    var margin  = Math.round(((revenue - total_cogs) / revenue) * 100);
+    document.getElementById('units-display').textContent = n.toLocaleString();
+    document.getElementById('price-display').textContent   = '$' + price;
+    document.getElementById('cogs-display').textContent    = '$' + cogs;
+    document.getElementById('out-revenue').textContent = '$' + revenue.toLocaleString();
+    document.getElementById('out-cogs').textContent    = '$' + total_cogs.toLocaleString();
+    document.getElementById('out-margin').textContent  = margin + '%';
+  }
+  Object.values(inputs).forEach(function (input) {
+    input.addEventListener('input', updateEmulator);
+  });
+  updateEmulator();
+})();
+</script>
+</body>
+</html>

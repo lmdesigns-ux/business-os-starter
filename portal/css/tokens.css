@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/**
+ * Yeast Coast Culture — Design tokens.
+ * Extends the Business OS token system with a YCC-specific palette.
+ * Aesthetic: warm pantry / fermentation studio — approachable, not corporate.
+ *
+ * data-palette="ycc"  — YCC warm amber/green (default)
+ * data-mode="light" | "dark"
+ */
+
+/* ================================================================
+   BASE — YCC Light defaults
+   ================================================================ */
+:root {
+  color-scheme: light dark;
+
+  /* ── Typography — IBM Plex for workshop consistency ── */
+  --font-sans:    "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-display: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", "SF Mono", "Fira Code", monospace;
+
+  /* ── Surfaces ── */
+  --bg:      #FAF8F3;
+  --bg-alt:  #F0EBE0;
+  --surface: #FFFFFF;
+  --card:    #FFFFFF;
+
+  /* ── Text ── */
+  --text:       #1A1208;
+  --text-muted: #6B5E45;
+  --muted:      #6B5E45;
+  --ink:        #1A1208;
+
+  /* ── Borders ── */
+  --border:       #1A1208;
+  --border-light: #D8CCB8;
+
+  /* ── Accent — amber/gold (YCC brand) ── */
+  --accent:       #C27A0A;
+  --accent-soft:  #F5E4C0;
+  --accent-light: #FBF4E2;
+
+  --link: var(--accent);
+
+  /* ── Status ── */
+  --done:    #2A5C3F;
+  --done-bg: #D6EDE0;
+  --badge-draft:    #7A7A72;
+  --badge-review:   #C27A0A;
+  --badge-complete: #2A5C3F;
+  --status-draft-bg:        #F0EDEA;
+  --status-draft:           #7A7A72;
+  --status-review-bg:       #F5E4C0;
+  --status-review:          #C27A0A;
+  --status-complete-bg:     #D6EDE0;
+  --status-complete:        #2A5C3F;
+  --status-in-progress-bg:  #FEF3C7;
+  --status-in-progress:     #B45309;
+  --status-launched-bg:     #DBEAFE;
+  --status-launched:        #1D4ED8;
+
+  /* ── Severity primitives ── */
+  --red-50:  #FEE2E2;
+  --red-300: #FCA5A5;
+  --red-900: #991B1B;
+  --red-950: #7F1D1D;
+
+  --sev-critica-bg: var(--red-50);
+  --sev-critica-fg: var(--red-900);
+  --sev-alta-bg:    var(--status-in-progress-bg);
+  --sev-alta-fg:    var(--status-in-progress);
+  --sev-positive-bg: var(--status-complete-bg);
+  --sev-positive-fg: var(--status-complete);
+  --sev-media-bg:   var(--status-draft-bg);
+  --sev-media-fg:   var(--status-draft);
+  --sev-baja-bg:    var(--status-draft-bg);
+  --sev-baja-fg:    var(--status-draft);
+
+  /* ── YCC-specific layer colors (consistent with slide deck) ── */
+  --layer-inputs:    #F5A623;
+  --layer-knowledge: #2ECBBB;
+  --layer-decisions: #4CAF82;
+
+  /* ── Tag colors — account types ── */
+  --tag-bar-bg:         #FEF3C7;
+  --tag-bar-text:       #B45309;
+  --tag-bottle-bg:      #DBEAFE;
+  --tag-bottle-text:    #1D4ED8;
+  --tag-restaurant-bg:  #D6EDE0;
+  --tag-restaurant-text:#2A5C3F;
+  --tag-distributor-bg: #EDE9FE;
+  --tag-distributor-text:#6D28D9;
+
+  /* ── Selection ── */
+  --selection-bg: #F5E4C0;
+  --selection-fg: #1A1208;
+
+  /* ── Elevation — flat ── */
+  --shadow: none;
+
+  /* ── Spacing & motion ── */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --radius:     0px;
+  --transition: 150ms ease;
+}
+
+/* ================================================================
+   MODE — YCC Dark
+   ================================================================ */
+[data-mode="dark"],
+[data-theme="dark"] {
+  --bg:      #16110A;
+  --bg-alt:  #211A10;
+  --surface: #2A2117;
+  --card:    #2A2117;
+  --text:       #F0EAE0;
+  --text-muted: #9A8A72;
+  --muted:      #9A8A72;
+  --ink:        #F0EAE0;
+  --border:       #4A3D2E;
+  --border-light: #332A1E;
+  --accent:       #D4960C;
+  --accent-soft:  #3D2D0A;
+  --accent-light: #2A1E06;
+  --done:    #4ADE80;
+  --done-bg: #052E16;
+  --badge-draft:    #C8BEA8;
+  --badge-review:   #D4960C;
+  --badge-complete: #4ADE80;
+  --status-draft-bg:        #1E1810;
+  --status-draft:           #8A7A62;
+  --status-review-bg:       #3D2D0A;
+  --status-review:          #D4960C;
+  --status-complete-bg:     #052E16;
+  --status-complete:        #4ADE80;
+  --status-in-progress-bg:  #422006;
+  --status-in-progress:     #FDE68A;
+  --status-launched-bg:     #1E3A5F;
+  --status-launched:        #93C5FD;
+  --tag-bar-bg:             #422006;
+  --tag-bar-text:           #FDE68A;
+  --tag-bottle-bg:          #1E3A5F;
+  --tag-bottle-text:        #93C5FD;
+  --tag-restaurant-bg:      #052E16;
+  --tag-restaurant-text:    #4ADE80;
+  --tag-distributor-bg:     #2E1065;
+  --tag-distributor-text:   #C4B5FD;
+  --selection-bg: #D4960C;
+  --selection-fg: #16110A;
+  --sev-critica-bg: var(--red-950);
+  --sev-critica-fg: var(--red-300);
+  --link: #D4960C;
+  --shadow: none;
+}

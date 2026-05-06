@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Brand Voice — Yeast Coast Culture</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <script src="data/ycc-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/shell-init.js"></script>
+  <style>
+    .brand-block {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-top: 2px solid var(--ink);
+      padding: var(--sp-6);
+      margin-bottom: var(--sp-6);
+    }
+    .brand-block .block-label {
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: var(--sp-3);
+    }
+    .brand-block .block-value {
+      font-size: 1.125rem;
+      line-height: 1.55;
+      color: var(--ink);
+      font-style: italic;
+    }
+
+    .tone-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+    }
+    .tone-chip {
+      font-family: var(--font-display);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: var(--sp-2) var(--sp-4);
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .channel-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 640px) { .channel-grid { grid-template-columns: 1fr; } }
+
+    .channel-card {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-left: 4px solid var(--accent);
+      padding: var(--sp-5);
+    }
+    .channel-card .ch-label {
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: var(--sp-2);
+    }
+    .channel-card .ch-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .avoid-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+    }
+    .avoid-chip {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      padding: var(--sp-1) var(--sp-3);
+      background: var(--status-draft-bg);
+      color: var(--status-draft);
+      text-decoration: line-through;
+      text-decoration-color: var(--status-in-progress);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <nav id="site-nav" class="site-nav" aria-label="Main navigation"></nav>
+  <div class="app-main">
+    <div class="app-top-bar">
+      <button type="button" id="nav-toggle" class="nav-drawer-toggle" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-drawer-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <span class="top-bar-title">Brand Voice</span>
+    </div>
+    <button type="button" id="nav-overlay" class="app-overlay" hidden aria-label="Close menu"></button>
+    <main class="page" id="main-content">
+
+      <div class="page-header">
+        <h1>Brand Voice</h1>
+        <p class="tagline">Mission, audience, tone, and channel guidance — compiled from brand notes.</p>
+      </div>
+
+      <!-- Mission -->
+      <div class="brand-block">
+        <div class="block-label">Mission</div>
+        <div class="block-value" id="mission"></div>
+      </div>
+
+      <!-- Audience -->
+      <div class="brand-block">
+        <div class="block-label">Audience</div>
+        <div class="block-value" id="audience" style="font-style:normal;"></div>
+      </div>
+
+      <!-- Tone -->
+      <div class="section-label"><span class="micro-label">Tone Attributes</span></div>
+      <div class="module" style="padding:var(--sp-5) var(--sp-6);">
+        <div class="tone-chips" id="tone-chips"></div>
+      </div>
+
+      <!-- Channel Guide -->
+      <div class="section-label"><span class="micro-label">Channel Guide</span></div>
+      <div class="channel-grid" id="channel-grid"></div>
+
+      <!-- Words to Avoid -->
+      <div class="section-label"><span class="micro-label">Words to Avoid</span></div>
+      <div class="module" style="padding:var(--sp-5) var(--sp-6);">
+        <p class="meta" style="margin-bottom:var(--sp-3);">These undermine the brand. Cut them.</p>
+        <div class="avoid-list" id="avoid-list"></div>
+      </div>
+
+      <footer class="site-footer">
+        <p>Yeast Coast Culture · Brand Voice</p>
+      </footer>
+    </main>
+  </div>
+</div>
+<script src="js/site-nav.js"></script>
+<script>
+(function () {
+  var B = window.PortalData.brand;
+
+  document.getElementById('mission').textContent  = B.mission;
+  document.getElementById('audience').textContent = B.audience;
+
+  document.getElementById('tone-chips').innerHTML = B.tone.map(function (t) {
+    return '<span class="tone-chip">' + t + '</span>';
+  }).join('');
+
+  var CH_LABELS = { email: 'Email', social: 'Social', events: 'Events', press: 'Press' };
+  document.getElementById('channel-grid').innerHTML = Object.keys(B.channels).map(function (k) {
+    return '<div class="channel-card">'
+      + '<div class="ch-label">' + (CH_LABELS[k] || k) + '</div>'
+      + '<div class="ch-text">' + B.channels[k] + '</div>'
+      + '</div>';
+  }).join('');
+
+  document.getElementById('avoid-list').innerHTML = B.avoid.map(function (w) {
+    return '<span class="avoid-chip">' + w + '</span>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

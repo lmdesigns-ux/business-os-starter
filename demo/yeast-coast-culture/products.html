@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Products — Yeast Coast Culture</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <script src="data/ycc-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/shell-init.js"></script>
+  <style>
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .product-grid { grid-template-columns: 1fr; } }
+
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-top: 2px solid var(--ink);
+      padding: var(--sp-5) var(--sp-5) var(--sp-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+    .product-card.is-seasonal {
+      border-top-color: var(--accent);
+    }
+    .product-card .product-sku {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .product-card .product-name {
+      font-family: var(--font-display);
+      font-size: 1.0625rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      color: var(--ink);
+    }
+    .product-card .product-category {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+    .product-card .product-meta {
+      display: flex;
+      gap: var(--sp-4);
+      margin-top: auto;
+      padding-top: var(--sp-2);
+      border-top: 1px solid var(--border-light);
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+    .product-card .product-meta strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .margin-bar {
+      height: 3px;
+      background: var(--border-light);
+      margin-top: var(--sp-1);
+    }
+    .margin-bar-fill { height: 100%; background: var(--layer-decisions); }
+
+    .badge-seasonal { background: var(--accent-soft); color: var(--accent); }
+    .badge-core     { background: var(--status-complete-bg); color: var(--status-complete); }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <nav id="site-nav" class="site-nav" aria-label="Main navigation"></nav>
+  <div class="app-main">
+    <div class="app-top-bar">
+      <button type="button" id="nav-toggle" class="nav-drawer-toggle" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-drawer-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <span class="top-bar-title">Products</span>
+    </div>
+    <button type="button" id="nav-overlay" class="app-overlay" hidden aria-label="Close menu"></button>
+    <main class="page" id="main-content">
+
+      <div class="page-header">
+        <h1>Products</h1>
+        <p class="tagline">Starter, ferments, and pickles — core pantry staples plus seasonal jars.</p>
+        <div class="meta-row">
+          <span><strong>6 SKUs</strong> · 4 core · 2 seasonal</span>
+          <span>Formats: pouch · pint · quart · half-pint</span>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-row" id="filters">
+        <button class="filter-btn is-active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="core">Core</button>
+        <button class="filter-btn" data-filter="seasonal">Seasonal</button>
+      </div>
+
+      <div class="product-grid" id="product-grid"></div>
+
+      <footer class="site-footer">
+        <p>Yeast Coast Culture · Products</p>
+      </footer>
+    </main>
+  </div>
+</div>
+<script src="js/site-nav.js"></script>
+<script>
+(function () {
+  var D = window.PortalData;
+
+  function renderProducts(filter) {
+    var products = D.products.filter(function (p) {
+      return filter === 'all' || p.status === filter;
+    });
+    var grid = document.getElementById('product-grid');
+    grid.innerHTML = products.map(function (p) {
+      var seasonal = p.status === 'seasonal';
+      var shelf = typeof p.shelf_months === 'number' ? p.shelf_months + ' mo' : '—';
+      return '<div class="product-card' + (seasonal ? ' is-seasonal' : '') + '" data-status="' + p.status + '">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;gap:var(--sp-2);">'
+        + '<span class="product-sku">' + p.sku + '</span>'
+        + '<span class="badge ' + (seasonal ? 'badge-seasonal' : 'badge-core') + '">' + (seasonal ? (p.season || 'Seasonal') : 'Core') + '</span>'
+        + '</div>'
+        + '<div>'
+        + '<div class="product-name">' + p.name + '</div>'
+        + '<div class="product-category">' + p.category + '</div>'
+        + '</div>'
+        + '<div class="product-meta">'
+        + '<div><strong>' + shelf + '</strong> shelf-stable</div>'
+        + '<div><strong>' + p.distribution + '</strong> Reach</div>'
+        + '<div style="flex:1;">'
+        + '<span style="display:block;font-size:0.75rem;color:var(--text-muted);">Margin</span>'
+        + '<strong style="font-size:0.875rem;">' + p.margin_pct + '%</strong>'
+        + '<div class="margin-bar"><div class="margin-bar-fill" style="width:' + p.margin_pct + '%"></div></div>'
+        + '</div>'
+        + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  renderProducts('all');
+
+  document.getElementById('filters').addEventListener('click', function (e) {
+    var btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('is-active'); });
+    btn.classList.add('is-active');
+    renderProducts(btn.dataset.filter);
+  });
+})();
+</script>
+</body>
+</html>

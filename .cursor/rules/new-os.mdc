@@ -1,0 +1,8 @@
+---
+description: Entry point for Business OS onboarding — loads canonical instructions from AGENTS.md
+alwaysApply: false
+---
+
+Load the repo-root **`AGENTS.md`** and execute the **`new-os`** workflow defined there (or the **`90-day plan`** workflow if the user asks for that).
+
+Do not duplicate those instructions here — keep a single source of truth in `AGENTS.md`.

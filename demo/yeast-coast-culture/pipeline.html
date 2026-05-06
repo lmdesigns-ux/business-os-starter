@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Pipeline — Yeast Coast Culture</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <script src="data/ycc-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/shell-init.js"></script>
+  <style>
+    .status-active   { background: var(--status-complete-bg);    color: var(--status-complete);    }
+    .status-prospect { background: var(--status-in-progress-bg); color: var(--status-in-progress); }
+    .status-won      { background: var(--status-launched-bg);    color: var(--status-launched);    }
+
+    .skus-cell {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-1);
+    }
+    .sku-chip {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      padding: 2px 5px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-alt);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <nav id="site-nav" class="site-nav" aria-label="Main navigation"></nav>
+  <div class="app-main">
+    <div class="app-top-bar">
+      <button type="button" id="nav-toggle" class="nav-drawer-toggle" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-drawer-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <span class="top-bar-title">Pipeline</span>
+    </div>
+    <button type="button" id="nav-overlay" class="app-overlay" hidden aria-label="Close menu"></button>
+    <main class="page" id="main-content">
+
+      <div class="page-header">
+        <h1>Pipeline</h1>
+        <p class="tagline">Retail, foodservice, and wholesale accounts across PA · NJ · NY.</p>
+        <div class="meta-row">
+          <span><strong>8 accounts</strong></span>
+          <span>4 active · 1 won · 3 prospect</span>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-row" id="filters">
+        <button class="filter-btn is-active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="active">Active</button>
+        <button class="filter-btn" data-filter="won">Won</button>
+        <button class="filter-btn" data-filter="prospect">Prospect</button>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table" id="pipeline-table">
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Type</th>
+              <th>State</th>
+              <th>Status</th>
+              <th>Contact</th>
+              <th>Last Contact</th>
+              <th>SKUs</th>
+            </tr>
+          </thead>
+          <tbody id="pipeline-body"></tbody>
+        </table>
+      </div>
+
+      <footer class="site-footer">
+        <p>Yeast Coast Culture · Pipeline</p>
+      </footer>
+    </main>
+  </div>
+</div>
+<script src="js/site-nav.js"></script>
+<script>
+(function () {
+  var D = window.PortalData;
+
+  var TYPE_TAG = {
+    'specialty grocer': 'tag-bottle',
+    'farmers market':   'tag-bar',
+    cafe:               'tag-restaurant',
+    bakery:             'tag-restaurant',
+    restaurant:         'tag-restaurant',
+    distributor:        'tag-distributor'
+  };
+
+  function renderPipeline(filter) {
+    var accounts = D.accounts.filter(function (a) {
+      return filter === 'all' || a.status === filter;
+    });
+    var tbody = document.getElementById('pipeline-body');
+    tbody.innerHTML = accounts.map(function (a) {
+      var tagCls = TYPE_TAG[a.type] || '';
+      var skusHtml = a.skus.length
+        ? a.skus.map(function (s) { return '<span class="sku-chip">' + s + '</span>'; }).join('')
+        : '<span class="meta">—</span>';
+      return '<tr>'
+        + '<td><strong>' + a.name + '</strong></td>'
+        + '<td><span class="tag ' + tagCls + '">' + a.type + '</span></td>'
+        + '<td>' + a.state + '</td>'
+        + '<td><span class="badge status-' + a.status + '">' + a.status + '</span></td>'
+        + '<td>' + a.contact + '</td>'
+        + '<td class="mono">' + a.last_contact + '</td>'
+        + '<td><div class="skus-cell">' + skusHtml + '</div></td>'
+        + '</tr>';
+    }).join('');
+  }
+
+  renderPipeline('all');
+
+  document.getElementById('filters').addEventListener('click', function (e) {
+    var btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('is-active'); });
+    btn.classList.add('is-active');
+    renderPipeline(btn.dataset.filter);
+  });
+})();
+</script>
+</body>
+</html>

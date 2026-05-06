@@ -1,0 +1,1396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Business OS — Technical.ly Builders 2026</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --r-background-color:  #0A0C12;
+      --r-main-font:         "IBM Plex Sans", system-ui, sans-serif;
+      --r-heading-font:      "IBM Plex Sans", system-ui, sans-serif;
+      --r-main-color:        #E8E4DC;
+      --r-heading-color:     #E8E4DC;
+      --r-link-color:        #F5A623;
+      --r-selection-color:   #F5A623;
+      --r-main-font-size:    32px;
+
+      --amber:    #F5A623;
+      --amber-dim: rgba(245, 166, 35, 0.12);
+      --teal:     #2ECBBB;
+      --teal-dim: rgba(46, 203, 187, 0.12);
+      --green:    #4CAF82;
+      --green-dim: rgba(76, 175, 130, 0.12);
+      --muted:    #6B7280;
+      --muted-mid: #9CA3AF;
+      --surface:  #131620;
+      --surface-hi: #1C2030;
+      --border:   rgba(255,255,255,0.07);
+      --border-hi: rgba(255,255,255,0.14);
+    }
+
+    /* ── Base ── */
+    .reveal { font-family: var(--r-main-font); }
+    .reveal .slides section { text-align: left; padding: 0 3rem; }
+    .reveal .slides section.center { text-align: center; }
+
+    .reveal h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      text-transform: none;
+    }
+    .reveal h1 .title-brand {
+      display: block;
+      font-size: 5.25rem;
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      line-height: 0.9;
+    }
+    .reveal h1 .title-tagline {
+      display: block;
+      margin-top: 1.1rem;
+      font-size: 2.3rem;
+      font-weight: 300;
+      letter-spacing: -0.015em;
+      line-height: 1.15;
+      color: var(--muted-mid);
+    }
+    .reveal h1 .title-tagline .title-profession {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--amber);
+    }
+    .reveal h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      text-transform: none;
+    }
+    .reveal h3 { font-size: 1rem; font-weight: 600; text-transform: none; letter-spacing: -0.01em; }
+    .reveal p  { line-height: 1.6; }
+    .reveal strong { font-weight: 600; color: var(--r-main-color); }
+
+    /* ── Color utilities ── */
+    .amber  { color: var(--amber);  }
+    .teal   { color: var(--teal);   }
+    .green  { color: var(--green);  }
+    .muted  { color: var(--muted);  }
+    .muted-mid { color: var(--muted-mid); }
+
+    /* ── Eyebrow label ── */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 2px;
+      background: var(--muted);
+      flex-shrink: 0;
+    }
+    .eyebrow.amber-eye { color: var(--amber); }
+    .eyebrow.amber-eye::before { background: var(--amber); }
+    .eyebrow.teal-eye  { color: var(--teal);  }
+    .eyebrow.teal-eye::before  { background: var(--teal);  }
+    .eyebrow.green-eye { color: var(--green); }
+    .eyebrow.green-eye::before { background: var(--green); }
+
+    /* ── Thesis / big quote ── */
+    .thesis {
+      font-size: 2.1rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+    }
+    .thesis em { color: var(--amber); font-style: normal; }
+
+    /* ── Rule accent ── */
+    .accent-rule {
+      width: 48px;
+      height: 4px;
+      background: var(--amber);
+      margin: 1.25rem 0 1.5rem;
+    }
+    .accent-rule.teal  { background: var(--teal);  }
+    .accent-rule.green { background: var(--green); }
+
+    /* ── Slide header (consistent top rhythm) ── */
+    .slide-header {
+      min-height: 11rem;
+      margin-bottom: 0.5rem;
+    }
+    .slide-header .eyebrow { margin-bottom: 1rem; }
+    .slide-header h2 { margin: 0 0 1rem; }
+    .slide-header .accent-rule { margin: 0; }
+    .slide-header .demo-badge { margin-bottom: 1rem; }
+
+    .slide-header + .three-col { margin-top: 1rem; }
+    .slide-header + .bos-model-layout { margin-top: 0.5rem; }
+    .slide-header + .principles-with-visual { margin-top: 0.75rem; }
+    .slide-header + .activity-cols { margin-top: 1rem; }
+    .slide-header + .bos-two-up { margin-top: 1rem; }
+
+    /* ── Layer connectors (slide 5) ── */
+    .layer-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem 0.75rem;
+      background: var(--surface-hi);
+      border: 1px solid var(--border);
+      font-size: 0.48rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    /* ── Surface card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.5rem 1.75rem;
+    }
+    .card + .card { margin-top: 0.6rem; }
+
+    /* ── Three-column layout ── */
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      margin-top: 1.75rem;
+      border: 1px solid var(--border);
+    }
+    .col-card {
+      background: var(--surface);
+      padding: 1.5rem 1.25rem 1.25rem;
+    }
+    .col-card-label {
+      font-size: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--amber);
+      margin-bottom: 0.6rem;
+    }
+    .col-card-label.teal-lbl  { color: var(--teal);  }
+    .col-card-label.green-lbl { color: var(--green); }
+    .col-card h3 { font-size: 1.05rem; margin-bottom: 0.75rem; color: var(--r-main-color); }
+    .col-card ul {
+      list-style: none;
+      padding: 0;
+      font-size: 0.78rem;
+      color: var(--muted-mid);
+    }
+    .col-card ul li {
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .col-card ul li:last-child { border-bottom: none; }
+
+    /* ── Layer card ── */
+    .layer-card {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.1rem 1.4rem;
+    }
+    .layer-card + .layer-card { margin-top: 0.5rem; }
+    .layer-num {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 3px 8px;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .layer-num.l1 { background: var(--amber-dim); color: var(--amber); }
+    .layer-num.l2 { background: var(--teal-dim);  color: var(--teal);  }
+    .layer-num.l3 { background: var(--green-dim); color: var(--green); }
+    .layer-card h3 { margin: 0 0 0.3rem; }
+    .layer-card p  { font-size: 0.82rem; color: var(--muted-mid); margin: 0; line-height: 1.5; }
+
+    /* ── Principles grid ── */
+    .principles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .principle {
+      background: var(--surface);
+      padding: 1.25rem 1.5rem 1.35rem;
+    }
+    .principle-num {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--border-hi);
+      line-height: 1;
+      margin-bottom: 0.6rem;
+    }
+    .principle h3 { font-size: 1rem; margin-bottom: 0.4rem; color: var(--amber); }
+    .principle h3.teal  { color: var(--teal);  }
+    .principle h3.green { color: var(--green); }
+    .principle h3.muted-c { color: var(--muted-mid); }
+    .principle p  { font-size: 0.78rem; color: var(--muted-mid); margin: 0; line-height: 1.55; }
+
+    /* ── Model layout (slide 5): layer stack + diagram, side by side ── */
+    .bos-model-layout {
+      display: grid;
+      grid-template-columns: minmax(240px, 42%) minmax(0, 1fr);
+      gap: 1.25rem 1.75rem;
+      margin-top: 1rem;
+      align-items: start;
+    }
+    .bos-model-layout .layer-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      align-self: start;
+      min-width: 0;
+    }
+    .bos-model-layout .layer-card {
+      padding: 0.75rem 1rem;
+    }
+    .bos-model-layout .layer-card h3 {
+      font-size: 0.95rem;
+      margin: 0 0 0.2rem;
+    }
+    .bos-model-layout .layer-card p {
+      font-size: 0.76rem;
+      line-height: 1.45;
+    }
+    .bos-model-layout .layer-connector {
+      padding: 0.28rem 0.6rem;
+      font-size: 0.44rem;
+    }
+    .bos-model-layout .bos-figure {
+      margin: 0;
+      min-width: 0;
+    }
+
+    .slide-header--compact {
+      min-height: 0;
+      margin-bottom: 0.35rem;
+    }
+    .slide-header--compact .eyebrow { margin-bottom: 0.5rem; }
+    .slide-header--compact h2 { margin: 0 0 0.5rem; }
+
+    /* ── Figures ── */
+    .bos-figure {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.5rem;
+    }
+    .bos-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 340px;
+      object-fit: contain;
+    }
+    .bos-figure--tight img { max-height: 195px; }
+    .bos-figure--compact img { max-height: 240px; }
+    .bos-figure--bare {
+      background: transparent;
+      border: 0;
+      padding: 0;
+    }
+    .bos-figure--bare img {
+      max-height: none;
+      width: 100%;
+    }
+    .bos-model-layout .bos-figure img {
+      max-height: min(48vh, 380px);
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .bos-caption {
+      font-size: 0.48rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin: 0.5rem 0 0;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── Before/After comparison ── */
+    .bos-two-up {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 1.25rem;
+    }
+    .bos-compare-panel {
+      background: var(--surface);
+      padding: 0.6rem;
+    }
+    .bos-compare-label {
+      font-size: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin: 0 0 0.5rem;
+    }
+    .bos-compare-label.before { color: var(--amber); }
+    .bos-compare-label.after  { color: var(--teal);  }
+    .bos-compare-body {
+      font-size: 0.72rem;
+      line-height: 1.55;
+      color: var(--muted-mid);
+      margin: 0 0 0.5rem;
+    }
+    .bos-compare-panel img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 290px;
+      object-fit: contain;
+    }
+
+    /* ── Principles with visual (slide 10) ── */
+    .principles-with-visual {
+      display: grid;
+      grid-template-columns: 1fr minmax(240px, 0.85fr);
+      grid-template-rows: auto auto;
+      gap: 1.5rem;
+      align-items: start;
+      margin-top: 1.25rem;
+    }
+    .principles-with-visual .principles {
+      margin-top: 0;
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .principles-with-visual .bos-figure {
+      grid-column: 2;
+      grid-row: 1;
+      align-self: start;
+    }
+    .principles-with-visual .bos-figure img { max-height: 320px; }
+
+    .principles-tail {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      font-size: 0.52rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin: 0;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      line-height: 1.5;
+    }
+
+    /* ── Code pill ── */
+    .code-flow {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.7rem;
+      color: var(--teal);
+      background: var(--teal-dim);
+      border: 1px solid rgba(46, 203, 187, 0.2);
+      padding: 0.7rem 1.1rem;
+      letter-spacing: 0.01em;
+      margin: 1.25rem 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    /* ── Layer-specific bg slides ── */
+    section[data-bg="l1"] { background: #110D06 !important; }
+    section[data-bg="l2"] { background: #050F0E !important; }
+    section[data-bg="l3"] { background: #05100A !important; }
+
+    .input-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .input-list li {
+      font-size: 0.92rem;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid rgba(245,166,35,0.15);
+      color: var(--muted-mid);
+    }
+    .input-list li:last-child { border-bottom: none; }
+    .input-list li strong { color: var(--r-main-color); }
+
+    /* ── Demo slide ── */
+    .demo-badge {
+      display: inline-block;
+      background: var(--amber);
+      color: #0A0C12;
+      font-size: 0.55rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 5px 12px;
+      margin-bottom: 2rem;
+    }
+    .demo-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .demo-step:last-child { border-bottom: none; }
+    .demo-step-num {
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--muted);
+      flex-shrink: 0;
+      padding-top: 3px;
+      width: 1.2rem;
+    }
+    .demo-step p { font-size: 0.82rem; color: var(--muted-mid); margin: 0; line-height: 1.5; }
+    .demo-step strong { color: var(--r-main-color); }
+
+    /* ── Activity slide ── */
+    .activity-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 1.5rem;
+    }
+    .activity-col {
+      background: var(--surface);
+      padding: 1.25rem;
+    }
+    .activity-col-head {
+      font-size: 0.48rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding-bottom: 0.65rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--amber);
+    }
+    .activity-col-head.teal-h  { border-color: var(--teal);  }
+    .activity-col-head.green-h { border-color: var(--green); }
+    .activity-col ul {
+      list-style: none;
+      padding: 0;
+    }
+    .activity-col ul li {
+      font-size: 0.72rem;
+      color: var(--muted-mid);
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .activity-col ul li.blank {
+      color: transparent;
+      user-select: none;
+    }
+    .activity-col ul li:last-child { border-bottom: none; }
+
+    /* ── QR tiles (linked SVG + caption) ── */
+    .qr-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      flex-shrink: 0;
+      padding: 0.65rem 0.7rem 0.55rem;
+      border-radius: 14px;
+      background: linear-gradient(155deg, var(--surface-hi) 0%, var(--surface) 55%, rgba(13, 16, 24, 0.98) 100%);
+      border: 1px solid var(--border-hi);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+    }
+    .qr-placeholder-tile {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      border-radius: 8px;
+      border: 2px dashed var(--border-hi);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted-mid);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.42rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-align: center;
+      text-transform: uppercase;
+      line-height: 1.35;
+      padding: 0.35rem;
+    }
+    .qr-placeholder--hero .qr-placeholder-tile {
+      width: 118px;
+      height: 118px;
+    }
+    /* Title slide — minimal QR (case study home); no card chrome at all */
+    .qr-placeholder--subtle {
+      padding: 0;
+      gap: 0.4rem;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+    .qr-placeholder--subtle .qr-subtle-frame {
+      display: block;
+      border-radius: 4px;
+      padding: 4px;
+      background: #f0ede6;
+      line-height: 0;
+      box-shadow: none;
+    }
+    .qr-placeholder--subtle .qr-subtle-frame img {
+      display: block;
+      width: 84px;
+      height: 84px;
+    }
+    .qr-placeholder--subtle .qr-caption .qr-title {
+      font-size: 0.34rem;
+      color: var(--muted);
+      opacity: 0.88;
+    }
+    .qr-placeholder--subtle .qr-caption .qr-url-line {
+      font-size: 0.3rem;
+      color: var(--muted-mid);
+      opacity: 0.78;
+    }
+    .qr-placeholder--closing .qr-placeholder-tile {
+      width: 110px;
+      height: 110px;
+    }
+    .qr-placeholder--closing .qr-closing-frame {
+      display: block;
+      flex-shrink: 0;
+      border-radius: 8px;
+      padding: 4px;
+      background: #f0ede6;
+      line-height: 0;
+      box-sizing: border-box;
+    }
+    .qr-placeholder--closing .qr-closing-frame img {
+      display: block;
+      width: 110px;
+      height: 110px;
+    }
+    .qr-placeholder span {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.38rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-align: center;
+      max-width: 12rem;
+      line-height: 1.35;
+    }
+    .qr-caption {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.12rem;
+    }
+    .qr-caption .qr-title {
+      font-size: 0.38rem;
+    }
+    .qr-caption .qr-url-line {
+      font-size: 0.34rem;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0.02em;
+      color: var(--muted-mid);
+      line-height: 1.25;
+    }
+
+    /* Live demo slide — QR beside header */
+    .slide-header.slide-header--demo {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      min-height: auto;
+    }
+    .slide-header--demo .slide-header-main {
+      flex: 1;
+      min-width: 0;
+    }
+    .qr-placeholder--demo .qr-placeholder-tile {
+      width: 100px;
+      height: 100px;
+    }
+    .qr-placeholder--demo .qr-demo-frame {
+      display: block;
+      flex-shrink: 0;
+      border-radius: 8px;
+      padding: 4px;
+      background: #f0ede6;
+      line-height: 0;
+      box-sizing: border-box;
+    }
+    .qr-placeholder--demo .qr-demo-frame img {
+      display: block;
+      width: 100px;
+      height: 100px;
+    }
+
+    /* Activity slide — dual QR row */
+    .activity-qr-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .qr-placeholder--activity .qr-placeholder-tile {
+      width: 96px;
+      height: 96px;
+    }
+    .qr-placeholder--activity .qr-activity-frame {
+      display: block;
+      flex-shrink: 0;
+      border-radius: 8px;
+      padding: 4px;
+      background: #f0ede6;
+      line-height: 0;
+      box-sizing: border-box;
+    }
+    .qr-placeholder--activity .qr-activity-frame img {
+      display: block;
+      width: 96px;
+      height: 96px;
+    }
+
+    /* ── Closing ── */
+    .closing-links {
+      display: flex;
+      gap: 0;
+      margin-top: 2.5rem;
+      border: 1px solid var(--border);
+    }
+    .slide-header + .closing-links { margin-top: 2rem; }
+    .closing-link-group {
+      flex: 1;
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--border);
+    }
+    .closing-link-group:last-child { border-right: none; }
+    .closing-link-group h3 {
+      font-size: 0.48rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .closing-link-group p  { font-size: 0.9rem; font-weight: 600; color: var(--amber); margin: 0; }
+
+    .closing-footer-row {
+      margin-top: 2rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .closing-contact { flex: 1; min-width: 12rem; }
+    .closing-contact a {
+      color: var(--muted-mid);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(138, 143, 158, 0.35);
+    }
+    .closing-contact a:hover { color: var(--amber); border-bottom-color: rgba(245, 166, 35, 0.45); }
+    .closing-qr-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── Reveal chrome ── */
+    .reveal .progress { color: var(--amber); }
+    .reveal .controls { color: var(--amber); }
+    .reveal .slide-number {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      background: none;
+    }
+
+    /* ── Speaker-facing utility ── */
+    .aside-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 1.75rem 0 1.25rem;
+    }
+
+    /* ── Title slide profession rotator ── */
+    .title-profession-wrap {
+      display: inline-block;
+      min-width: 12ch;
+      vertical-align: baseline;
+      white-space: nowrap;
+      text-align: left;
+    }
+    .title-profession {
+      display: inline-block;
+    }
+    .title-caret {
+      display: inline-block;
+      width: 0.06em;
+      height: 0.85em;
+      background: currentColor;
+      margin-left: 0.06em;
+      vertical-align: -0.05em;
+      animation: title-caret-blink 0.53s step-end infinite;
+    }
+    @keyframes title-caret-blink {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .title-caret { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ═══════════════════════════════════════ 1. TITLE ════ -->
+    <section>
+      <div class="eyebrow">Technical.ly Builders · May 8, 2026 · Philadelphia</div>
+      <h1>
+        <span class="title-brand">Business OS.</span>
+        <span class="title-tagline">Every surface <span id="title-article">a</span> <span class="title-profession-wrap"><span id="title-profession" class="title-profession" aria-live="polite">solo</span><span class="title-caret" aria-hidden="true"></span></span><br>business needs.</span>
+      </h1>
+      <div class="accent-rule"></div>
+      <p style="font-size:0.95rem;color:var(--muted-mid);max-width:34rem;line-height:1.6;">
+        How scattered business data becomes a <strong>knowledge system that compounds</strong> — markdown, vanilla JS, and AI.
+      </p>
+      <div style="margin-top:2.75rem;display:flex;align-items:center;gap:2.5rem;">
+        <div>
+          <p style="font-size:0.9rem;font-weight:600;margin:0 0 0.25rem;">Luis Cielak</p>
+          <p style="font-size:0.72rem;color:var(--muted);margin:0;">luiscielak.com</p>
+        </div>
+        <div class="qr-placeholder qr-placeholder--hero qr-placeholder--subtle" role="figure" aria-label="Case study site — scan to open">
+          <a class="qr-subtle-frame" href="https://buss-os.luiscielak.com/" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+            <img src="assets/qr-case-study.svg" alt="" width="84" height="84" decoding="async">
+          </a>
+          <div class="qr-caption">
+            <span class="qr-title">Follow along</span>
+            <span class="qr-url-line">buss-os.luiscielak.com</span>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        Welcome. I'm going to show you something practical — a system for making your scattered business knowledge compound. Share the case-study URL or QR on slide for people following along async.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════════ 2. THE PROBLEM ════ -->
+    <section>
+      <div class="slide-header">
+        <div class="eyebrow">The Problem</div>
+        <h2>How many places does your<br>business knowledge live?</h2>
+        <div class="accent-rule"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.75rem;margin-top:0.25rem;">
+        <div class="card" style="border-left:3px solid var(--amber);">
+          <p style="margin:0;font-size:0.9rem;color:var(--muted-mid);">
+            <strong>Raise your hand</strong> if it's in more than 5 tools.
+          </p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--muted);">
+          <p style="margin:0;font-size:0.9rem;color:var(--muted-mid);">
+            Keep it up if it's <strong>more than 10.</strong>
+          </p>
+        </div>
+      </div>
+      <aside class="notes">
+        Hands exercise. Pause here. Let them feel the problem before you name it. Most hands stay up past 5, many past 10.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════ 3. THE DEFAULT ════ -->
+    <section>
+      <div class="slide-header">
+        <div class="eyebrow">The Default</div>
+        <h2>Knowledge that <span class="amber">doesn't compound</span></h2>
+        <div class="accent-rule"></div>
+      </div>
+      <div class="three-col">
+        <div class="col-card">
+          <div class="col-card-label">Tool 1</div>
+          <h3>CRM</h3>
+          <ul>
+            <li>Contacts</li>
+            <li>Deals</li>
+            <li>Notes</li>
+          </ul>
+        </div>
+        <div class="col-card">
+          <div class="col-card-label">Tool 2</div>
+          <h3>Spreadsheets</h3>
+          <ul>
+            <li>Finance</li>
+            <li>Pipeline</li>
+            <li>Planning</li>
+          </ul>
+        </div>
+        <div class="col-card">
+          <div class="col-card-label">Tool 3</div>
+          <h3>Docs / Notion</h3>
+          <ul>
+            <li>Strategy</li>
+            <li>Brand</li>
+            <li>SOPs</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--muted);max-width:42rem;line-height:1.6;">
+        Each tool does its job. None of them talk to each other. Every decision costs you a search.
+      </p>
+      <aside class="notes">
+        This is the default. Not because founders are disorganized — because the tools aren't designed to compound.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════ 4. THE REFRAME ════ -->
+    <section class="center">
+      <div class="eyebrow" style="justify-content:center;">The Reframe</div>
+      <div style="max-width:38rem;margin:2rem auto 0;">
+        <div class="thesis">
+          You don't need more tools.<br>
+          You need a <em>layer</em> that makes<br>
+          your tools compound.
+        </div>
+        <div class="accent-rule" style="margin:2rem auto 0;"></div>
+      </div>
+      <aside class="notes">
+        This is the whole talk in one sentence. The rest is what it looks like in practice.
+      </aside>
+    </section>
+
+    <!-- ══════════════════════════════ 5. THE 3-LAYER MODEL ════ -->
+    <section>
+      <div class="slide-header slide-header--compact">
+        <div class="eyebrow">The System</div>
+        <h2>The 3-Layer Model</h2>
+        <div class="accent-rule"></div>
+      </div>
+
+      <div class="bos-model-layout">
+        <div class="layer-stack fragment">
+          <div class="layer-card">
+            <div class="layer-num l1">L1</div>
+            <div>
+              <h3 class="amber">Inputs</h3>
+              <p>Raw business data from many sources — scattered across tools by default. The portal gives them a home.</p>
+            </div>
+          </div>
+          <div class="layer-connector" aria-hidden="true">Compile · sync · structure</div>
+          <div class="layer-card">
+            <div class="layer-num l2">L2</div>
+            <div>
+              <h3 class="teal">Knowledge</h3>
+              <p>Markdown is the source of truth. Sync scripts compile it into portal data. AI maintains it — you direct.</p>
+            </div>
+          </div>
+          <div class="layer-connector" aria-hidden="true">Surface · decide · ship</div>
+          <div class="layer-card">
+            <div class="layer-num l3">L3</div>
+            <div>
+              <h3 class="green">Insights &amp; decisions</h3>
+              <p>Not a dashboard you stare at. A system you operate through.</p>
+            </div>
+          </div>
+        </div>
+        <figure class="bos-figure bos-figure--bare">
+          <img src="assets/layers-diagram.png" width="688" height="384" loading="lazy" decoding="async" alt="Three stacked planes: raw inputs as scattered shapes, a middle grid of organized knowledge, and top-level dashboards for decisions.">
+          <figcaption class="bos-caption">Same visual as the case study</figcaption>
+        </figure>
+      </div>
+      <aside class="notes">
+        The key insight: you already have layers 1 and 3. The missing piece is layer 2 — a structured knowledge layer that connects inputs to insights and decisions. The diagram is the same three-plane visual as the case-study page.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════ 6. LAYER 1 ════ -->
+    <section data-background-color="#110D06">
+      <div class="slide-header">
+        <div class="eyebrow amber-eye">Layer 1</div>
+        <h2 class="amber">Inputs</h2>
+        <div class="accent-rule"></div>
+      </div>
+      <p style="font-size:0.9rem;color:var(--muted-mid);margin:0 0 0.25rem;">
+        The raw material. Everything your business already produces.
+      </p>
+      <ul class="input-list">
+        <li><strong>CRM notes</strong> &amp; deal history</li>
+        <li><strong>Financial reports</strong> &amp; production-run data</li>
+        <li><strong>Strategy</strong> &amp; planning docs</li>
+        <li><strong>Operations</strong> &amp; SOPs</li>
+        <li><strong>Marketing copy</strong> &amp; brand guidelines</li>
+      </ul>
+      <aside class="notes">Layer 1 is what you already have. The problem is it lives everywhere and requires a search every time you need to act.</aside>
+    </section>
+
+    <!-- ═══════════════════════════════════ 7. LAYER 2 ════ -->
+    <section data-background-color="#050F0E">
+      <div class="slide-header">
+        <div class="eyebrow teal-eye">Layer 2</div>
+        <h2 class="teal">Knowledge</h2>
+        <div class="accent-rule teal"></div>
+      </div>
+      <p style="font-size:0.9rem;color:var(--muted-mid);margin:0;">
+        Markdown as source of truth. Compile, don't copy.
+      </p>
+      <div class="code-flow">
+        inputs/90-day-plan.md → sync-plan.js → portal data → planning.html
+      </div>
+      <figure class="bos-figure bos-figure--bare">
+        <img src="assets/data-flow.png" width="688" height="384" loading="lazy" decoding="async" alt="Blueprint-style pipeline: planning markdown flows through sync tooling into compiled portal data and a static planning page.">
+        <figcaption class="bos-caption">How your 90-day plan compiles into a live planning view</figcaption>
+      </figure>
+      <ul style="margin-top:1rem;list-style:none;padding:0;display:flex;flex-direction:column;gap:0.35rem;font-size:0.82rem;color:var(--muted-mid);">
+        <li>One file is the source. Everything else is compiled.</li>
+        <li>AI maintains the structure. You direct the decisions.</li>
+        <li>Git is your version history. Cursor is your editor.</li>
+      </ul>
+      <aside class="notes">Layer 2 is the novel part. Instead of copying data between tools, you maintain one markdown file and compile views from it. This is what makes the system compound.</aside>
+    </section>
+
+    <!-- ═══════════════════════════════════ 8. LAYER 3 ════ -->
+    <section data-background-color="#05100A">
+      <div class="slide-header">
+        <div class="eyebrow green-eye">Layer 3</div>
+        <h2 class="green">Insights &amp; decisions</h2>
+        <div class="accent-rule green"></div>
+      </div>
+      <p style="font-size:0.9rem;color:var(--muted-mid);margin:0 0 0.25rem;">
+        Decision-grade views you open when you're about to act.
+      </p>
+      <div class="three-col">
+        <div class="col-card">
+          <div class="col-card-label green-lbl">View 1</div>
+          <h3>Dashboard</h3>
+          <ul>
+            <li>Revenue MTD</li>
+            <li>Active accounts</li>
+            <li>Top SKU</li>
+          </ul>
+        </div>
+        <div class="col-card">
+          <div class="col-card-label green-lbl">View 2</div>
+          <h3>Pipeline</h3>
+          <ul>
+            <li>Accounts by status</li>
+            <li>Last contact</li>
+            <li>SKUs carried</li>
+          </ul>
+        </div>
+        <div class="col-card">
+          <div class="col-card-label green-lbl">View 3</div>
+          <h3>Finance</h3>
+          <ul>
+            <li>Revenue by run</li>
+            <li>Pricing emulator</li>
+            <li>Margin by SKU</li>
+          </ul>
+        </div>
+      </div>
+      <aside class="notes">Layer 3 is just a website. Static HTML. But because it's compiled from your markdown source, it's always current — and it's designed for the insights and decisions you actually need to make.</aside>
+    </section>
+
+    <!-- ════════════════════════════ 8b. BEFORE / AFTER ════ -->
+    <section>
+      <div class="slide-header">
+        <div class="eyebrow">Case Study</div>
+        <h2>Before &amp; after</h2>
+        <div class="accent-rule"></div>
+      </div>
+      <p style="margin:0 0 0.75rem;font-size:0.72rem;color:var(--muted);max-width:42rem;line-height:1.5;">
+        Same pattern as <strong style="color:var(--muted-mid);">buss-os.luiscielak.com</strong> — shown here with YCC as the workshop-sized demo.
+      </p>
+      <div class="bos-two-up">
+        <div class="bos-compare-panel">
+          <p class="bos-compare-label before">Before</p>
+          <p class="bos-compare-body">Strategy in a doc updated twice a year. Pipeline in a spreadsheet. Finances in another tool. Notes in a folder nobody reopens.</p>
+          <img src="assets/before-chaos.png" width="688" height="688" loading="lazy" decoding="async" alt="Overhead flat-lay of a chaotic desk: overlapping browser windows, spreadsheets, sticky notes, and alerts — monochrome line art with a hint of teal.">
+        </div>
+        <div class="bos-compare-panel">
+          <p class="bos-compare-label after">After</p>
+          <p class="bos-compare-body">One portal. One navigation. One design system. Pull up the view you need before the call — pipeline, finance, brand voice — and watch new inputs ripple through automatically.</p>
+          <img src="assets/after-portal.png" width="688" height="688" loading="lazy" decoding="async" alt="Overhead flat-lay of one clean screen: structured portal with card grid and sidebar — matching companion illustration style.">
+        </div>
+      </div>
+      <aside class="notes">
+        Tie to the case study site: before is search-and-context switching; after is one navigation and design system. Bridge into the live YCC demo as the workshop-sized version of the same pattern.
+      </aside>
+    </section>
+
+    <!-- ════════════════════════════ 8c. DESIGN SYSTEM ════ -->
+    <section>
+      <div class="slide-header">
+        <div class="eyebrow">Design System</div>
+        <h2>One token file, every page</h2>
+        <div class="accent-rule teal"></div>
+      </div>
+      <p style="margin-top:0;font-size:0.82rem;color:var(--muted);max-width:40rem;line-height:1.5;">
+        Palette × mode stay orthogonal — change a token and the whole portal moves together.
+      </p>
+      <figure class="bos-figure" style="margin-top:1rem;">
+        <img src="assets/design-system-grid.png" width="688" height="384" loading="lazy" decoding="async" alt="Grid of minimalist UI cards in light and dark rows across five brand-tinted columns, abstract placeholders only.">
+        <figcaption class="bos-caption">Light / dark rows × brand axes — no framework lock-in</figcaption>
+      </figure>
+      <aside class="notes">
+        Quick beat: this is why static HTML at scale doesn't turn into a mess — tokens and a shared grid, same discipline you'll see in the starter repo.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════════ 9. LIVE DEMO ════ -->
+    <section>
+      <div class="slide-header slide-header--demo">
+        <div class="slide-header-main">
+          <div class="demo-badge">Live Demo</div>
+          <h2>Let me show you this on a<br>real business.</h2>
+          <div class="accent-rule"></div>
+        </div>
+        <div class="qr-placeholder qr-placeholder--demo" role="figure" aria-label="YCC demo portal — scan to open">
+          <a class="qr-demo-frame" href="https://demo-os.luiscielak.com/" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+            <img src="assets/qr-demo-portal.svg" alt="" width="100" height="100" decoding="async">
+          </a>
+          <div class="qr-caption">
+            <span class="qr-title">Follow on phone</span>
+            <span class="qr-url-line">demo-os.luiscielak.com</span>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--muted-mid);margin-bottom:1.5rem;">
+        Yeast Coast Culture — fermentation &amp; pickling; flagship product is a dehydrated sourdough starter.
+      </p>
+      <div style="border:1px solid var(--border);">
+        <div class="demo-step">
+          <div class="demo-step-num">01</div>
+          <p>Open <strong>YCC portal</strong> in browser — <code style="font-size:0.75rem;color:var(--muted-mid);">index.html → dashboard</code></p>
+        </div>
+        <div class="demo-step">
+          <div class="demo-step-num">02</div>
+          <p>Navigate to <strong>Planning</strong> — "this is Layer 3 — insights &amp; decisions"</p>
+        </div>
+        <div class="demo-step">
+          <div class="demo-step-num">03</div>
+          <p>Open <strong>inputs/90-day-plan.md</strong> in Cursor — "this is a raw input, Layer 1"</p>
+        </div>
+        <div class="demo-step">
+          <div class="demo-step-num">04</div>
+          <p>Run <code style="font-size:0.75rem;color:var(--teal);">node skills/sync-plan.js</code></p>
+        </div>
+        <div class="demo-step">
+          <div class="demo-step-num">05</div>
+          <p>Reload <code style="font-size:0.75rem;color:var(--muted-mid);">planning.html</code> — new milestone appears — "this is Layer 2 doing its job"</p>
+        </div>
+      </div>
+      <aside class="notes">
+        DEMO SCRIPT — follow steps in order: dashboard → Planning → edit inputs/90-day-plan.md → node skills/sync-plan.js → reload planning.html. FALLBACK: If Cursor crashes, have Loom recording of this exact sequence ready.
+      </aside>
+    </section>
+
+    <!-- ═══════════════════════════════ 10. THE PRINCIPLES ════ -->
+    <section>
+      <div class="slide-header">
+        <div class="eyebrow">Design Principles</div>
+        <h2>Four rules that make it work</h2>
+        <div class="accent-rule green"></div>
+      </div>
+      <div class="principles-with-visual">
+        <div class="principles">
+          <div class="principle">
+            <div class="principle-num">01</div>
+            <h3>Markdown is the source of truth</h3>
+            <p>Portable, diffable, AI-friendly.</p>
+          </div>
+          <div class="principle">
+            <div class="principle-num">02</div>
+            <h3 class="teal">Compile, don't copy</h3>
+            <p>One edit propagates everywhere via sync scripts.</p>
+          </div>
+          <div class="principle">
+            <div class="principle-num">03</div>
+            <h3 class="green">AI maintains; you direct</h3>
+            <p>The model handles syncing; you own the decisions.</p>
+          </div>
+          <div class="principle">
+            <div class="principle-num">04</div>
+            <h3 class="muted-c">Own your infrastructure</h3>
+            <p>No SaaS lock-in; everything in a git repo you control.</p>
+          </div>
+        </div>
+        <figure class="bos-figure" style="margin:0;">
+          <img src="assets/principles-closing.png" width="688" height="384" loading="lazy" decoding="async" alt="Abstract geometric composition: nested rectangles within a circle and radiating lines, Bauhaus-inspired.">
+          <figcaption class="bos-caption">Same closing visual as the case-study principles section</figcaption>
+        </figure>
+        <p class="principles-tail">+ Every exploration adds up — sessions feed back into the knowledge base instead of evaporating in chat.</p>
+      </div>
+      <aside class="notes">These aren't philosophical. They're the technical choices that make the system robust. If you violate any of them, the system breaks down within a few months.</aside>
+    </section>
+
+    <!-- ════════════════════════════════ 11. YOUR TURN ════ -->
+    <section>
+      <div class="slide-header">
+        <div class="eyebrow">Workshop Activity</div>
+        <h2>Your turn — 15 minutes</h2>
+        <div class="accent-rule teal"></div>
+      </div>
+      <div class="activity-cols">
+        <div class="activity-col">
+          <div class="activity-col-head amber">My Scattered Inputs</div>
+          <ul>
+            <li>What tools do you use?</li>
+            <li>Where does your roadmap live?</li>
+            <li>Where does financial data live?</li>
+            <li>Where do your OKRs / quarterly goals live?</li>
+            <li class="blank">–</li>
+            <li class="blank">–</li>
+          </ul>
+        </div>
+        <div class="activity-col">
+          <div class="activity-col-head teal-h">What Knowledge Lives Here?</div>
+          <ul>
+            <li>What would your <code style="font-size:0.68rem;color:var(--teal);">inputs/90-day-plan.md</code> contain? (milestones, bets, owners)</li>
+            <li>What fields does it need?</li>
+            <li>What does the sync script output?</li>
+            <li class="blank">–</li>
+            <li class="blank">–</li>
+            <li class="blank">–</li>
+          </ul>
+        </div>
+        <div class="activity-col">
+          <div class="activity-col-head green-h">What Decision-Grade View Do I Need?</div>
+          <ul>
+            <li>What would <code style="font-size:0.68rem;color:var(--green);">planning.html</code> show the team every Monday?</li>
+            <li>What question do you answer weekly?</li>
+            <li>What view changes your week?</li>
+            <li>Who else on your team needs it?</li>
+            <li class="blank">–</li>
+            <li class="blank">–</li>
+          </ul>
+        </div>
+      </div>
+      <div class="activity-qr-row">
+        <div class="qr-placeholder qr-placeholder--activity" role="figure" aria-label="FigJam workshop board — scan to open">
+          <a class="qr-activity-frame" href="https://www.figma.com/figjam/" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+            <img src="assets/qr-figjam.svg" alt="" width="96" height="96" decoding="async">
+          </a>
+          <div class="qr-caption">
+            <span class="qr-title">FigJam · activity</span>
+            <span class="qr-url-line">figma.com/figjam · regenerate QR when board URL is final</span>
+          </div>
+        </div>
+        <div class="qr-placeholder qr-placeholder--activity" role="figure" aria-label="Workshop worksheet — scan to open">
+          <a class="qr-activity-frame" href="https://buss-os.luiscielak.com/worksheet/" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+            <img src="assets/qr-worksheet.svg" alt="" width="96" height="96" decoding="async">
+          </a>
+          <div class="qr-caption">
+            <span class="qr-title">Worksheet · digital</span>
+            <span class="qr-url-line">buss-os.luiscielak.com/worksheet</span>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        Have them work in pairs if possible. Seed with "think about the 90-day plan demo we just saw — which layer felt most familiar?" Walk around for 2-3 min then bring back for 1-2 shares.
+        Regenerate qr-figjam.svg when the FigJam share link is final so the scan matches the board.
+      </aside>
+    </section>
+
+    <!-- ════════════════════════════════ 12. CLOSING ════ -->
+    <section>
+      <div class="slide-header">
+        <div class="eyebrow">What's next</div>
+        <h2>Fork it. Build yours.</h2>
+        <div class="accent-rule"></div>
+      </div>
+      <div class="closing-links">
+        <div class="closing-link-group">
+          <h3>Case Study</h3>
+          <p>buss-os.luiscielak.com</p>
+        </div>
+        <div class="closing-link-group">
+          <h3>Starter Repo</h3>
+          <p>github.com/luiscielak/<wbr>business-os-starter</p>
+        </div>
+        <div class="closing-link-group">
+          <h3>Community</h3>
+          <p>Cursor Philly · <a href="https://cursorphilly.com/" target="_blank" rel="noopener noreferrer" style="color:var(--amber);text-decoration:none;border-bottom:1px solid rgba(245,166,35,0.35);">cursorphilly.com</a></p>
+        </div>
+      </div>
+      <div class="closing-footer-row">
+        <div class="closing-contact">
+          <p style="font-size:0.75rem;color:var(--muted);margin:0;">Luis Cielak · <a href="https://luiscielak.com/" target="_blank" rel="noopener noreferrer">luiscielak.com</a></p>
+          <p style="font-size:0.72rem;color:var(--muted);margin:0.35rem 0 0;"><a href="https://www.linkedin.com/in/cielak/" target="_blank" rel="noopener noreferrer">linkedin.com/in/cielak</a></p>
+        </div>
+        <div class="closing-qr-row">
+          <div class="qr-placeholder qr-placeholder--closing" role="figure" aria-label="Luis Cielak on LinkedIn — scan to open">
+            <a class="qr-closing-frame" href="https://www.linkedin.com/in/cielak/" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+              <img src="assets/qr-linkedin.svg" alt="" width="110" height="110" decoding="async">
+            </a>
+            <div class="qr-caption">
+              <span class="qr-title">Connect · LinkedIn</span>
+              <span class="qr-url-line">linkedin.com/in/cielak</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes">
+        Leave this slide up. Don't rush. The best questions come after you stop talking.
+        Three asks: (1) fork the starter repo (URL in the grid above), (2) open case study at buss-os.luiscielak.com, (3) Cursor Philly at cursorphilly.com. LinkedIn QR on the right for follow-ups.
+      </aside>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    transition: 'fade',
+    transitionSpeed: 'default',
+    progress: true,
+    slideNumber: 'c/t',
+    showNotes: false,
+    controlsTutorial: false,
+    plugins: [ RevealNotes ]
+  });
+
+  (function () {
+    var anchor = 'solo';
+    var pool = [
+      'bootstrapped', 'scrappy', 'lean', 'boutique', 'studio', 'maker',
+      'stubborn', 'chaotic', 'weird', 'funky', 'quirky',
+      'hungry', 'relentless', 'restless',
+      'growing', 'scaling', 'focused',
+      'curious', 'opinionated',
+      'profitable'
+    ];
+
+    var wordEl = document.getElementById('title-profession');
+    var articleEl = document.getElementById('title-article');
+    if (!wordEl || !articleEl) return;
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var vowels = ['a', 'e', 'i', 'o', 'u'];
+
+    function articleFor(w) {
+      return vowels.indexOf(w.charAt(0).toLowerCase()) !== -1 ? 'an' : 'a';
+    }
+
+    function wait(ms) {
+      return new Promise(function (resolve) {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var k = a.length - 1; k > 0; k--) {
+        var r = Math.floor(Math.random() * (k + 1));
+        var t = a[k];
+        a[k] = a[r];
+        a[r] = t;
+      }
+      return a;
+    }
+
+    if (reduceMotion) {
+      var orderRm = [anchor].concat(shuffle(pool));
+      var idxRm = 0;
+      setInterval(function () {
+        var w = orderRm[idxRm % orderRm.length];
+        articleEl.textContent = articleFor(w);
+        wordEl.textContent = w;
+        idxRm++;
+        if (idxRm % orderRm.length === 0) {
+          orderRm = [anchor].concat(shuffle(pool));
+        }
+      }, 1600);
+      return;
+    }
+
+    async function typeWord(word, speed) {
+      var s = speed !== undefined ? speed : 100;
+      for (var i = 0; i <= word.length; i++) {
+        wordEl.textContent = word.slice(0, i);
+        await wait(s);
+      }
+    }
+
+    async function deleteWord(speed) {
+      var s = speed !== undefined ? speed : 50;
+      var word = wordEl.textContent;
+      for (var i = word.length; i >= 0; i--) {
+        wordEl.textContent = word.slice(0, i);
+        await wait(s);
+      }
+    }
+
+    (async function run() {
+      var order = [anchor].concat(shuffle(pool));
+      articleEl.textContent = articleFor(order[0]);
+      await wait(1600);
+      await deleteWord();
+      var i = 1;
+      while (true) {
+        if (i >= order.length) {
+          order = [anchor].concat(shuffle(pool));
+          i = 1;
+        }
+        var w = order[i++];
+        articleEl.textContent = articleFor(w);
+        await typeWord(w);
+        await wait(1600);
+        await deleteWord();
+      }
+    })();
+  })();
+</script>
+</body>
+</html>

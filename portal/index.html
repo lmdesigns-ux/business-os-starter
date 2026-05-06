@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Dashboard — Business OS</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <script src="data/portal-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/shell-init.js"></script>
+  <style>
+    .dash-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-8);
+    }
+    @media (max-width: 900px) { .dash-stats { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .dash-stats { grid-template-columns: 1fr; } }
+
+    .revenue-bar {
+      height: 8px;
+      background: var(--border-light);
+      margin: var(--sp-2) 0 var(--sp-1);
+      overflow: hidden;
+    }
+    .revenue-bar-fill { height: 100%; background: var(--accent); }
+
+    .activity-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      padding: var(--sp-3) 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 0.875rem;
+    }
+    .activity-row:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .activity-label { flex: 1; color: var(--text); }
+    .activity-section { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+
+    .nav-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); }
+    @media (max-width: 900px) { .nav-cards { grid-template-columns: 1fr; } }
+
+    .index-card.is-muted {
+      opacity: 0.65;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .plan-widget {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-top: 3px solid var(--layer-knowledge);
+      padding: var(--sp-5) var(--sp-6);
+      margin-bottom: var(--sp-8);
+    }
+    .plan-widget .plan-widget-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--sp-4);
+      flex-wrap: wrap;
+      margin-bottom: var(--sp-3);
+    }
+    .plan-widget .plan-widget-title {
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 var(--sp-2);
+    }
+    .plan-widget .plan-widget-ns {
+      font-size: 0.9375rem;
+      line-height: 1.45;
+      color: var(--ink);
+      margin: 0;
+      max-width: 42rem;
+    }
+    .plan-widget .plan-widget-link {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .plan-widget .plan-widget-link:hover { text-decoration: underline; }
+    .plan-widget .plan-progress-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      flex-wrap: wrap;
+      margin-top: var(--sp-4);
+    }
+    .plan-widget .plan-progress-label {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+    .plan-widget .plan-progress-bar {
+      flex: 1;
+      min-width: 120px;
+      height: 8px;
+      background: var(--border-light);
+      overflow: hidden;
+    }
+    .plan-widget .plan-progress-fill {
+      height: 100%;
+      background: var(--layer-decisions);
+      transition: width 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <nav id="site-nav" class="site-nav" aria-label="Main navigation"></nav>
+  <div class="app-main">
+    <div class="app-top-bar">
+      <button type="button" id="nav-toggle" class="nav-drawer-toggle" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-drawer-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <span class="top-bar-title">Your Business</span>
+    </div>
+    <button type="button" id="nav-overlay" class="app-overlay" hidden aria-label="Close menu"></button>
+    <main class="page" id="main-content">
+
+      <div class="page-header">
+        <h1>Dashboard</h1>
+        <p class="tagline" id="dash-tagline">Business OS · starter portal</p>
+        <div class="meta-row" id="dash-meta">
+          <span><strong>Metrics</strong> populate after you add data</span>
+          <span>Type <code style="font-family:var(--font-mono);font-size:0.85rem;">new-os</code> in chat to onboard</span>
+        </div>
+      </div>
+
+      <div id="dash-stats" class="dash-stats"></div>
+
+      <div id="plan-widget-mount"></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-6);">
+        <div>
+          <div class="section-label"><span class="micro-label">Recent Activity</span></div>
+          <div class="module" style="padding:var(--sp-4) var(--sp-6);">
+            <div id="activity-list"></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label"><span class="micro-label">Quick Access</span></div>
+          <div class="nav-cards" id="nav-cards"></div>
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <p><span id="footer-brand">Your Business</span> · Business OS · <span id="footer-date"></span></p>
+      </footer>
+    </main>
+  </div>
+</div>
+<script src="js/site-nav.js"></script>
+<script>
+(function () {
+  var D  = window.PortalData;
+  var M  = D.metrics;
+  var site = D.site || {};
+
+  function stripBold(s) {
+    return String(s || '').replace(/\*\*/g, '');
+  }
+  function escHtml(s) {
+    var el = document.createElement('span');
+    el.textContent = String(s);
+    return el.innerHTML;
+  }
+
+  var goal90 = site.goal90 || '';
+  var taglineEl = document.getElementById('dash-tagline');
+  if (taglineEl) {
+    taglineEl.textContent = goal90
+      ? goal90
+      : 'Type `new-os` to onboard (set your business name and 90-day goal) — then `90-day plan` for planning.';
+  }
+
+  var metaEl = document.getElementById('dash-meta');
+  if (metaEl && goal90) {
+    metaEl.innerHTML = '<span><strong>90-day focus</strong></span><span>' + escHtml(goal90) + '</span>';
+  }
+
+  document.getElementById('footer-brand').textContent = site.name || 'Your Business';
+  document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  /* Plan widget */
+  var mount = document.getElementById('plan-widget-mount');
+  var plan = D.plan;
+  if (mount) {
+    if (plan && plan.northStar) {
+      var st = plan.stats || { total: 0, done: 0 };
+      var pctPlan = st.total ? Math.round((st.done / st.total) * 100) : 0;
+      mount.innerHTML = '<div class="plan-widget">'
+        + '<div class="plan-widget-head">'
+        + '<div><div class="plan-widget-title">90-day north star</div>'
+        + '<p class="plan-widget-ns">' + escHtml(stripBold(plan.northStar)) + '</p></div>'
+        + '<a class="plan-widget-link" href="planning.html">Open planning →</a>'
+        + '</div>'
+        + '<div class="plan-progress-row">'
+        + '<span class="plan-progress-label">Milestones ' + st.done + '/' + st.total + '</span>'
+        + '<div class="plan-progress-bar"><div class="plan-progress-fill" style="width:' + pctPlan + '%"></div></div>'
+        + '<span class="plan-progress-label">' + pctPlan + '%</span>'
+        + '</div>'
+        + '</div>';
+    } else {
+      mount.innerHTML = '<div class="plan-widget">'
+        + '<div class="plan-widget-head">'
+        + '<div><div class="plan-widget-title">90-day plan</div>'
+        + '<p class="plan-widget-ns">No plan yet. Type <code style="font-family:var(--font-mono);font-size:0.85rem;">90-day plan</code> in chat to start planning, or add <code style="font-family:var(--font-mono);font-size:0.85rem;">inputs/90-day-plan.md</code> and run <code style="font-family:var(--font-mono);font-size:0.85rem;">node skills/sync-plan.js</code>.</p></div>'
+        + '<a class="plan-widget-link" href="planning.html">Planning page →</a>'
+        + '</div></div>';
+    }
+  }
+
+  var pct = M.revenue_target ? Math.round((M.revenue_mtd / M.revenue_target) * 100) : 0;
+  var stats = [
+    { label: 'Revenue MTD', value: M.revenue_mtd ? '$' + (M.revenue_mtd / 1000).toFixed(1) + 'k' : '—', sub: 'Target: ' + (M.revenue_target ? '$' + (M.revenue_target / 1000) + 'k' : '—'), bar: M.revenue_target ? pct : null },
+    { label: 'Active Accounts', value: String(M.active_accounts != null ? M.active_accounts : '—'), sub: 'Add pipeline data when ready' },
+    { label: 'Top SKU', value: M.top_sku || '—', sub: 'From your catalog inputs', large: true },
+    { label: 'Brand Score', value: M.brand_score != null ? M.brand_score + '/100' : '—', sub: 'Optional consistency check' }
+  ];
+  var statsEl = document.getElementById('dash-stats');
+  statsEl.innerHTML = stats.map(function (s) {
+    return '<div class="stat-card">'
+      + '<div class="stat-label">' + s.label + '</div>'
+      + '<div class="stat-value" style="' + (s.large ? 'font-size:1.25rem;' : '') + '">' + s.value + '</div>'
+      + (s.bar != null ? '<div class="revenue-bar"><div class="revenue-bar-fill" style="width:' + s.bar + '%"></div></div>' : '')
+      + '<div class="stat-sub">' + s.sub + '</div>'
+      + '</div>';
+  }).join('');
+
+  var actEl = document.getElementById('activity-list');
+  var acts = D.recentActivity || [];
+  actEl.innerHTML = acts.length
+    ? acts.map(function (a) {
+        return '<div class="activity-row">'
+          + '<span class="activity-dot" aria-hidden="true"></span>'
+          + '<span class="activity-label"><a href="' + a.href + '">' + a.label + '</a></span>'
+          + '<span class="activity-section">' + a.section + '</span>'
+          + '</div>';
+      }).join('')
+    : '<p style="margin:0;color:var(--text-muted);font-size:0.875rem;">No activity yet — milestones will show here once you compile a plan.</p>';
+
+  var pages = [
+    { href: 'planning.html', label: 'Plan', detail: '90-day milestones & bets' },
+    { href: '#', label: 'Pipeline', detail: 'Placeholder — extend your portal', muted: true },
+    { href: '#', label: 'Finance', detail: 'Placeholder — extend your portal', muted: true }
+  ];
+  var navEl = document.getElementById('nav-cards');
+  navEl.innerHTML = pages.map(function (p) {
+    var muted = p.muted ? ' index-card is-muted' : '';
+    return '<a href="' + p.href + '" class="index-card' + muted + '"'
+      + (p.muted ? ' tabindex="-1" aria-disabled="true"' : '')
+      + '>'
+      + '<div class="card-label">View</div>'
+      + '<h3>' + p.label + '</h3>'
+      + '<p class="card-detail">' + p.detail + '</p>'
+      + '</a>';
+  }).join('');
+})();
+</script>
+</body>
+</html>
