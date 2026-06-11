@@ -1,25 +1,29 @@
 # Business Model Canvas
 **Business:** Design Grove
-**Date:** June 4, 2026
+**Date:** June 11, 2026
 
 ## Value Propositions
-- Clear maps of how services actually run today — so teams stop guessing and start improving
-- Service blueprints and process maps nonprofits can use with boards, funders, and frontline staff
+- Uncover operational friction and clarify how systems actually operate in practice — not just on paper
+- Clear maps of how services run today — so teams stop guessing and start improving
+- Service blueprints and process maps values-aligned organizations can use with boards, funders, and frontline staff
 - Practical workshops that turn messy workflows into shared language and next-step priorities
 - Better visibility into who you serve and how work flows to them (without heavy new software)
+- Web development and UI design as supporting capabilities when a client needs digital delivery — not the primary focus
 
 ## Customer Segments
-- Small to mid-size nonprofits (roughly $500K–$10M annual budget) with complex service delivery
-- Program directors and operations leads feeling friction between “mission” and day-to-day execution
+- **Primary:** Small to mid-size nonprofits (roughly $500K–$10M annual budget) with complex service delivery
+- **Secondary:** Other values-aligned organizations — mission-driven for-profits, cooperatives, public-benefit orgs — where operational clarity and employee experience matter
+- Program directors and operations leads feeling friction between "mission" and day-to-day execution
 - Organizations preparing for strategic planning, grant reporting, or a systems change initiative
-- Secondary: foundations or capacity-building intermediaries who sponsor org improvement work
+- Foundations or capacity-building intermediaries who sponsor org improvement work
 
 ## Channels
 - Warm referrals from nonprofit networks, former colleagues, and board connections
+- Network connections and collaborative communities to identify opportunities
 - LinkedIn thought leadership (before/after process maps, workshop takeaways — anonymized)
 - Speaking at local nonprofit associations, funder convenings, and service-design meetups
 - Direct outreach to a curated list of aligned organizations (90-day focus)
-- Partnerships with consultants who don’t do operations / service design (referral swap)
+- Partnerships with consultants who don't do operations / service design (referral swap)
 
 ## Customer Relationships
 - Discovery conversations to understand mission, pain points, and readiness for mapping work
@@ -35,13 +39,19 @@
 
 ## Key Resources
 - Facilitation skills and workshop formats (mapping, blueprinting, improvement)
+- UX research background as foundation for service design and research-informed strategy
+- Repeatable workshop and documentation methods
+- Portfolio artifacts demonstrating facilitation and systems thinking
 - Templates for service blueprints, process maps, and workshop agendas
-- Case stories and anonymized examples that build trust with nonprofit buyers
-- Network of nonprofit leaders, funders, and peer consultants for referrals
+- Case stories and anonymized examples that build trust with values-aligned buyers
+- Network of nonprofit leaders, funders, peer consultants, and collaborative communities for referrals
 - Your time — primary delivery capacity until you delegate or subcontract
 
 ## Key Activities
-- Prospecting and qualifying nonprofit leads aligned with your offer
+- Prospecting and qualifying values-aligned leads (nonprofits primary) aligned with your offer
+- Building confidence and fluency in process mapping facilitation
+- Developing repeatable workshop and documentation methods
+- Creating portfolio artifacts that demonstrate facilitation and systems thinking
 - Discovery calls and scoping workshops / engagements
 - Designing and facilitating mapping and improvement sessions
 - Synthesizing workshop output into clear, usable artifacts
@@ -57,4 +67,4 @@
 ## Cost Structure
 - **Fixed:** insurance, software (scheduling, docs, light CRM), professional development, marketing site
 - **Variable:** subcontractor facilitators or designers, travel for on-site workshops, materials for sessions
-- **Time cost:** unpaid biz dev and content creation until pipeline is steady — budget hours weekly for outreach
+- **Time cost:** unpaid biz dev, content creation, repositioning, and portfolio building until pipeline is steady — budget hours weekly for outreach

@@ -1,13 +1,14 @@
 {
   "business_name": "Design Grove",
-  "pitch_one_liner": "I help nonprofits clarify their processes and service design so they can execute their missions more efficiently and keep better track of who they serve.",
+  "pitch_one_liner": "Design Grove helps values-aligned organizations uncover operational friction, clarify processes, and design services that work better for employees and customers.",
   "revenue_bullets": [
     "Service mapping & Blueprint workshops",
     "Process mapping & workflow discovery",
     "Collaborative Improvement Workshops"
   ],
-  "goal_90d": "Identify 10 potential businesses to reach out to",
+  "goal_90d": "Land 2 high-quality client contracts and document a repeatable client acquisition process",
   "sample_data_mode": "inferred",
+  "strategy_doc": "inputs/Focus-Strategy.md",
   "moxie": {
     "implementation_kit": "operations/moxie/README.md",
     "hellofresh_client_canonical": "Grocery Delivery E-Services USA Inc.",
