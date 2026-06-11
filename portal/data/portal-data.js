@@ -67,7 +67,7 @@ window.PortalData = {
     "prospects_count": 2,
     "prospects_goal": 10,
     "active_projects": 12,
-    "retainer_hours_qtd": 2221956,
+    "retainer_hours_qtd": 20,
     "hf_forecast_monthly": 420,
     "hf_revenue_qtd": 698,
     "invoice_pdf_count": 17
@@ -189,7 +189,7 @@ window.PortalData = {
     }
   ],
   "retainer": {
-    "hours_logged_qtd": 2221956,
+    "hours_logged_qtd": 20,
     "hours_billed_qtd": 15.5,
     "revenue_by_project": {
       "DIY Program": 427.5,
@@ -199,7 +199,7 @@ window.PortalData = {
     },
     "effective_rate": 45,
     "hf_revenue_qtd": 698,
-    "hours_divergence_pct": 100,
+    "hours_divergence_pct": 22.5,
     "source": "Moxie export + invoice PDFs"
   },
   "navCards": [

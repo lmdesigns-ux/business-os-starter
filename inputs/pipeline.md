@@ -121,7 +121,7 @@ Opportunities and clients from Moxie (+ HelloFresh retainer detail from invoice 
     }
   ],
   "retainer": {
-    "hours_logged_qtd": 2221956,
+    "hours_logged_qtd": 20,
     "hours_billed_qtd": 15.5,
     "revenue_by_project": {
       "DIY Program": 427.5,
@@ -131,7 +131,7 @@ Opportunities and clients from Moxie (+ HelloFresh retainer detail from invoice 
     },
     "effective_rate": 45,
     "hf_revenue_qtd": 698,
-    "hours_divergence_pct": 100,
+    "hours_divergence_pct": 22.5,
     "source": "Moxie export + invoice PDFs"
   }
 }

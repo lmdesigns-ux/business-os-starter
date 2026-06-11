@@ -7,7 +7,8 @@
     "sync:moxie": "node skills/sync-moxie-export.js",
     "sync:portal": "node skills/sync-portal-data.js",
     "sync:plan": "node skills/sync-plan.js",
-    "sync:all": "node skills/parse-invoice-pdfs.js && node skills/sync-moxie-export.js && node skills/sync-portal-data.js"
+    "sync:all": "node skills/parse-invoice-pdfs.js && node skills/sync-moxie-export.js && node skills/sync-portal-data.js",
+    "test": "node skills/test/moxie-time.test.js"
   },
   "devDependencies": {
     "pdf-parse": "^2.4.5",

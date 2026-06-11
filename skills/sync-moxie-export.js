@@ -20,6 +20,7 @@ const fs = require('fs');
 const path = require('path');
 const { updateJsonFence, readJsonFence } = require('./lib/markdown-json');
 const { aggregateInvoiceDetails, normalizeInvoiceNumber } = require('./lib/invoice-pdf');
+const { parseTimeRowHours, parseTimeRowDate } = require('./lib/moxie-time');
 
 const ROOT = path.join(__dirname, '..');
 const EXPORTS_DIR = path.join(ROOT, 'operations', 'moxie', 'exports');
@@ -84,12 +85,6 @@ function pickCol(row, aliases) {
 function parseMoney(v) {
   if (typeof v === 'number' && !Number.isNaN(v)) return v;
   const n = parseFloat(String(v).replace(/[^0-9.-]/g, ''));
-  return Number.isNaN(n) ? 0 : n;
-}
-
-function parseHours(v) {
-  if (typeof v === 'number') return v;
-  const n = parseFloat(String(v).replace(/[^0-9.]/g, ''));
   return Number.isNaN(n) ? 0 : n;
 }
 
@@ -309,14 +304,13 @@ function parseWorkbook(filePath, invoiceDetails) {
       pickCol(r, ['client', 'client_name', 'account'])
     );
     const project = String(pickCol(r, ['project', 'project_name']) || '');
-    const hours = parseHours(pickCol(r, ['hours', 'time', 'duration', 'quantity']));
-    const dateRaw = pickCol(r, ['date', 'work_date', 'entry_date']);
-    const date = dateRaw ? new Date(dateRaw) : null;
+    const hours = parseTimeRowHours(r);
+    const date = parseTimeRowDate(r);
     const isHf =
       HELLOFRESH_NAMES.has((client || '').toLowerCase()) ||
       /hellofresh|diy program|ux research|competitor tracker|deep dives/i.test(project);
     if (!isHf) continue;
-    if (date && !Number.isNaN(date.getTime()) && date < qStart) continue;
+    if (!date || date < qStart) continue;
     retainerHoursQtd += hours;
   }
 
@@ -526,5 +520,7 @@ module.exports = {
   normalizeClientName,
   dedupeOpportunities,
   loadInvoiceDetails,
-  normalizeInvoiceNumber
+  normalizeInvoiceNumber,
+  parseTimeRowHours,
+  parseTimeRowDate
 };
