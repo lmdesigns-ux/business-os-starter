@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Workshop — Business OS</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <script src="data/portal-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/shell-init.js"></script>
+  <style>
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-6);
+    }
+    .filter-chip {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: var(--sp-2) var(--sp-4);
+      border: 2px solid var(--border-light);
+      background: var(--surface);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .filter-chip:hover { border-color: var(--ink); color: var(--ink); }
+    .filter-chip.is-active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+    .filter-group-label {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      align-self: center;
+      margin-right: var(--sp-2);
+    }
+    .filter-divider {
+      width: 1px;
+      height: 1.5rem;
+      background: var(--border-light);
+      align-self: center;
+      margin: 0 var(--sp-2);
+    }
+
+    .artefact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-4);
+    }
+    @media (max-width: 700px) { .artefact-grid { grid-template-columns: 1fr; } }
+
+    .artefact-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-left: 4px solid var(--layer-knowledge);
+      padding: var(--sp-5);
+      transition: border-left-color 0.15s;
+    }
+    .artefact-card:hover { border-left-color: var(--accent); }
+    .artefact-card.type-workshop { border-left-color: var(--layer-inputs); }
+    .artefact-card.type-process_map { border-left-color: var(--layer-decisions); }
+
+    .artefact-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-3);
+    }
+    .artefact-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.0625rem;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+    .artefact-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      flex-shrink: 0;
+    }
+    .artefact-type {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      background: var(--bg-alt);
+      color: var(--text-muted);
+    }
+    .artefact-detail {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0 0 var(--sp-3);
+    }
+    .artefact-meta {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-3);
+    }
+    .artefact-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-1);
+      margin-top: var(--sp-3);
+    }
+    .artefact-tag {
+      font-size: 0.6875rem;
+      padding: 1px 6px;
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    .artefact-empty {
+      text-align: center;
+      padding: var(--sp-8);
+      border: 2px dashed var(--border-light);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    .artefact-empty code {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      background: var(--bg-alt);
+      padding: 2px 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <nav id="site-nav" class="site-nav" aria-label="Main navigation"></nav>
+  <div class="app-main">
+    <div class="app-top-bar">
+      <button type="button" id="nav-toggle" class="nav-drawer-toggle" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-drawer-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <span class="top-bar-title">Workshop</span>
+    </div>
+    <button type="button" id="nav-overlay" class="app-overlay" hidden aria-label="Close menu"></button>
+    <main class="page" id="main-content">
+
+      <div class="page-header">
+        <h1>Workshop artefacts</h1>
+        <p class="tagline">Layer 1: <code style="font-size:0.85rem;">inputs/artefacts/</code> · Layer 2: <code style="font-size:0.85rem;">node skills/sync-portal-data.js</code> · Layer 3: this page.</p>
+      </div>
+
+      <div class="filter-row" id="type-filters" aria-label="Filter by type"></div>
+      <div class="filter-row" id="status-filters" aria-label="Filter by status"></div>
+
+      <div id="artefact-root"></div>
+
+      <footer class="site-footer">
+        <p><span id="footer-brand">Your Business</span> · Workshop · <span id="footer-date"></span></p>
+      </footer>
+    </main>
+  </div>
+</div>
+<script src="js/site-nav.js"></script>
+<script>
+(function () {
+  function esc(s) {
+    if (s == null || s === '') return '';
+    var el = document.createElement('span');
+    el.textContent = String(s);
+    return el.innerHTML;
+  }
+
+  var D = window.PortalData;
+  var site = D.site || {};
+  document.getElementById('footer-brand').textContent = site.name || 'Your Business';
+  document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  var artefacts = (D && D.artefacts) || [];
+  var root = document.getElementById('artefact-root');
+  var typeFilter = 'all';
+  var statusFilter = 'all';
+
+  function statusBadge(status) {
+    var cls = 'badge-draft';
+    if (status === 'review') cls = 'badge-review';
+    if (status === 'ready') cls = 'badge-complete';
+    return '<span class="badge ' + cls + '">' + esc(status) + '</span>';
+  }
+
+  function typeLabel(type) {
+    return type === 'workshop' ? 'Workshop' : 'Process map';
+  }
+
+  function detailLine(a) {
+    if (a.type === 'workshop') {
+      return [a.duration, a.audience].filter(Boolean).join(' · ');
+    }
+    return a.scope || '';
+  }
+
+  function filtered() {
+    return artefacts.filter(function (a) {
+      if (typeFilter !== 'all' && a.type !== typeFilter) return false;
+      if (statusFilter !== 'all' && a.status !== statusFilter) return false;
+      return true;
+    });
+  }
+
+  function renderFilters() {
+    var typeRoot = document.getElementById('type-filters');
+    var statusRoot = document.getElementById('status-filters');
+
+    var typeOpts = [
+      { id: 'all', label: 'All' },
+      { id: 'workshop', label: 'Workshops' },
+      { id: 'process_map', label: 'Process maps' }
+    ];
+    var statusOpts = [
+      { id: 'all', label: 'All statuses' },
+      { id: 'draft', label: 'Draft' },
+      { id: 'review', label: 'Review' },
+      { id: 'ready', label: 'Ready' }
+    ];
+
+    typeRoot.innerHTML = '<span class="filter-group-label">Type</span>'
+      + typeOpts.map(function (o) {
+        return '<button type="button" class="filter-chip' + (typeFilter === o.id ? ' is-active' : '') + '" data-filter="type" data-value="' + o.id + '">' + esc(o.label) + '</button>';
+      }).join('');
+
+    statusRoot.innerHTML = '<span class="filter-group-label">Status</span>'
+      + statusOpts.map(function (o) {
+        return '<button type="button" class="filter-chip' + (statusFilter === o.id ? ' is-active' : '') + '" data-filter="status" data-value="' + o.id + '">' + esc(o.label) + '</button>';
+      }).join('');
+
+    typeRoot.querySelectorAll('[data-filter]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (btn.getAttribute('data-filter') === 'type') typeFilter = btn.getAttribute('data-value');
+        else statusFilter = btn.getAttribute('data-value');
+        renderFilters();
+        renderGrid();
+      });
+    });
+    statusRoot.querySelectorAll('[data-filter]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (btn.getAttribute('data-filter') === 'type') typeFilter = btn.getAttribute('data-value');
+        else statusFilter = btn.getAttribute('data-value');
+        renderFilters();
+        renderGrid();
+      });
+    });
+  }
+
+  function renderGrid() {
+    var list = filtered();
+    if (!artefacts.length) {
+      root.innerHTML = '<div class="artefact-empty"><p>No artefacts yet.</p><p>Add markdown under <code>inputs/artefacts/workshops/</code> or <code>process-maps/</code>, then run <code>node skills/sync-portal-data.js</code>.</p><p>Templates: <code>references/workshop-outline-template.md</code> · <code>references/process-map-template.md</code></p></div>';
+      return;
+    }
+    if (!list.length) {
+      root.innerHTML = '<div class="artefact-empty"><p>No artefacts match these filters.</p></div>';
+      return;
+    }
+
+    root.innerHTML = '<div class="artefact-grid">' + list.map(function (a) {
+      var tags = (a.tags || []).map(function (t) {
+        return '<span class="artefact-tag">' + esc(t) + '</span>';
+      }).join('');
+
+      return '<a href="artefact.html?id=' + encodeURIComponent(a.id) + '" class="artefact-card type-' + esc(a.type) + '">'
+        + '<div class="artefact-card-head">'
+        + '<h2>' + esc(a.title) + '</h2>'
+        + '<div class="artefact-badges">'
+        + '<span class="artefact-type">' + esc(typeLabel(a.type)) + '</span>'
+        + statusBadge(a.status)
+        + '</div></div>'
+        + '<p class="artefact-detail">' + esc(detailLine(a)) + '</p>'
+        + '<div class="artefact-meta">'
+        + (a.sku ? '<span>SKU ' + esc(a.sku) + '</span>' : '')
+        + '<span>Updated ' + esc(a.updated) + '</span>'
+        + '</div>'
+        + (tags ? '<div class="artefact-tags">' + tags + '</div>' : '')
+        + '</a>';
+    }).join('') + '</div>';
+  }
+
+  renderFilters();
+  renderGrid();
+})();
+</script>
+</body>
+</html>

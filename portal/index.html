@@ -229,12 +229,31 @@
     }
   }
 
+  function fmtMoney(n) {
+    if (n == null || n === 0) return '—';
+    if (n >= 1000) return '$' + (n / 1000).toFixed(1) + 'k';
+    return '$' + Number(n).toLocaleString('en-US');
+  }
+
   var pct = M.revenue_target ? Math.round((M.revenue_mtd / M.revenue_target) * 100) : 0;
+  var prospectGoal = M.prospects_goal != null ? M.prospects_goal : 10;
+  var prospectCount = M.prospects_count != null ? M.prospects_count : 0;
+  var R = D.retainer || null;
+  var retainerSub = 'Retainer QTD: ' + (M.retainer_hours_qtd != null ? M.retainer_hours_qtd + 'h logged' : '—') + ' (HelloFresh)';
+  if (R && R.hours_billed_qtd != null) {
+    retainerSub += ' · ' + R.hours_billed_qtd + 'h billed';
+  }
+  if (M.hf_revenue_qtd != null && M.hf_revenue_qtd > 0) {
+    retainerSub += ' · ' + fmtMoney(M.hf_revenue_qtd) + ' HF QTD';
+  }
+  if (M.hf_forecast_monthly != null && M.hf_forecast_monthly > 0) {
+    retainerSub += ' · ~' + fmtMoney(M.hf_forecast_monthly) + '/mo forecast';
+  }
   var stats = [
-    { label: 'Revenue MTD', value: M.revenue_mtd ? '$' + (M.revenue_mtd / 1000).toFixed(1) + 'k' : '—', sub: 'Target: ' + (M.revenue_target ? '$' + (M.revenue_target / 1000) + 'k' : '—'), bar: M.revenue_target ? pct : null },
-    { label: 'Active Accounts', value: String(M.active_accounts != null ? M.active_accounts : '—'), sub: 'Add pipeline data when ready' },
-    { label: 'Top SKU', value: M.top_sku || '—', sub: 'From your catalog inputs', large: true },
-    { label: 'Brand Score', value: M.brand_score != null ? M.brand_score + '/100' : '—', sub: 'Optional consistency check' }
+    { label: 'Revenue MTD', value: fmtMoney(M.revenue_mtd), sub: 'Target: ' + fmtMoney(M.revenue_target), bar: M.revenue_target ? pct : null },
+    { label: 'Pipeline value', value: fmtMoney(M.pipeline_value), sub: 'Open opportunities (excl. $0 discovery)' },
+    { label: 'Prospects', value: prospectCount + ' / ' + prospectGoal, sub: 'North star · also in Moxie Biz Dev 2026', large: true },
+    { label: 'Active projects', value: String(M.active_projects != null ? M.active_projects : '—'), sub: retainerSub }
   ];
   var statsEl = document.getElementById('dash-stats');
   statsEl.innerHTML = stats.map(function (s) {
@@ -258,18 +277,16 @@
       }).join('')
     : '<p style="margin:0;color:var(--text-muted);font-size:0.875rem;">No activity yet — milestones will show here once you compile a plan.</p>';
 
-  var pages = [
-    { href: 'planning.html', label: 'Plan', detail: '90-day milestones & bets' },
-    { href: '#', label: 'Pipeline', detail: 'Placeholder — extend your portal', muted: true },
-    { href: '#', label: 'Finance', detail: 'Placeholder — extend your portal', muted: true }
+  var pages = D.navCards || [
+    { href: 'pipeline.html', label: 'Pipeline', detail: 'Opportunities & clients' },
+    { href: 'planning.html', label: 'Planning', detail: '90-day milestones & bets' },
+    { href: 'canvas.html', label: 'Canvas', detail: 'Business model canvas' }
   ];
   var navEl = document.getElementById('nav-cards');
   navEl.innerHTML = pages.map(function (p) {
-    var muted = p.muted ? ' index-card is-muted' : '';
-    return '<a href="' + p.href + '" class="index-card' + muted + '"'
-      + (p.muted ? ' tabindex="-1" aria-disabled="true"' : '')
-      + '>'
-      + '<div class="card-label">View</div>'
+    var ext = p.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+    return '<a href="' + p.href + '" class="index-card"' + ext + '>'
+      + '<div class="card-label">' + (p.external ? 'Open' : 'View') + '</div>'
       + '<h3>' + p.label + '</h3>'
       + '<p class="card-detail">' + p.detail + '</p>'
       + '</a>';

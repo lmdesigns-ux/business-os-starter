@@ -8,6 +8,7 @@ Single source of truth for onboarding in **Cursor**, **Claude Code**, **Codex CL
 |-----------|-----|
 | `New OS`, `Build OS`, `new-os`, “start business os”, “onboard me”, “scaffold my portal” | **new-os** workflow |
 | `90-day plan`, “add my quarterly plan”, “sync milestones” | **90-day plan** workflow |
+| `review artefact`, `workshop review`, “feedback on process map” | **review-artefact** workflow |
 
 After **new-os** completes, suggest: *“Want to add milestones next? Say **`90-day plan`**.”*
 
@@ -158,6 +159,45 @@ node skills/sync-plan.js
 That compiles markdown → `portal/data/portal-data.js` inside the `/* BEGIN_COMPILED_PLAN */` region.
 
 Confirm success and ask them to reload **`portal/planning.html`** and **`portal/index.html`**.
+
+---
+
+## Workflow: `review-artefact`
+
+Review workshop outlines and process maps stored under `inputs/artefacts/`.
+
+### Rules
+
+1. Ask **one question** if needed: which artefact (by title or `id`)? Skip if the user already named it.
+2. Read the matching file under `inputs/artefacts/workshops/` or `inputs/artefacts/process-maps/`.
+3. Critique in chat using the type-specific checklist below.
+4. **Append** dated bullets under `## Review notes` in the source markdown — do not overwrite existing notes.
+5. If status is `draft`, suggest moving to `review` in the JSON fence; only change status if the user confirms.
+6. Run `node skills/sync-portal-data.js` (or tell the user to run it) and ask them to reload `portal/artefacts.html`.
+
+### Workshop checklist
+
+- Purpose is clear and scoped to one outcome
+- Learning outcomes are observable and match the agenda
+- Timing is realistic (including breaks and transitions)
+- Activities engage the stated audience (not facilitator-only)
+- Materials list is complete
+- Debrief and close tie back to outcomes
+- Fit for audience (group size, power dynamics, nonprofit context if relevant)
+
+### Process map checklist
+
+- Scope boundary is explicit (start, end, what's in / out)
+- Roles and handoffs are labeled
+- Decision points and branches are shown
+- Exceptions or failure paths are considered
+- Legend or swimlanes are clear if used
+- Mermaid is appropriate for complexity, or `externalUrl` should point to FigJam/Miro for richer maps
+
+### Templates
+
+- `references/workshop-outline-template.md`
+- `references/process-map-template.md`
 
 ---
 

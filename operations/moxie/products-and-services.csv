@@ -1,0 +1,12 @@
+sku_id,name,type,default_rate_usd,billable_unit,description,use_when
+DG-DISC-30,Discovery call (30 min),fixed,0,each,Qualification call; no deliverable. Do not open a full project.,Nonprofit or SMB first conversation
+DG-WKS-HALF,Process clarity workshop — half day,fixed,2500,each,Facilitated half-day: map one critical workflow; team leaves with shared language and priorities.,90-day plan entry offer; nonprofit prospecting
+DG-MAP-STD,Service mapping engagement — standard,fixed,7500,each,2–4 facilitated sessions + service blueprint deliverable + improvement backlog.,Core nonprofit offering per BMC
+DG-MAP-EXT,Service mapping engagement — extended,fixed,12000,each,Multi-program or larger org; additional sessions and synthesis.,Orgs with multiple service lines
+DG-OH-MONTH,Post-workshop office hours (monthly),retainer,600,month,One facilitated hour/month for adoption questions after a mapping engagement.,Follow-on after workshop or mapping
+DG-LP-FIXED,Landing page — design + build,fixed,1500,each,Single landing page: brief mockup build review handoff.,Top Realty Talk With Marie pattern
+DG-MERCH-SPRINT,Brand / merch strategy sprint,fixed,3200,each,Research strategy guide optional Shopify implementation.,PhilanthroCulture-style fixed sprint
+DG-WEB-5,Website — up to 5 pages,fixed,3500,each,Design and develop up to five pages on client host.,Coach Evelt pattern
+DG-UX-HR,UX research — hourly,hourly,135,hour,Contractor UX research and analysis for HelloFresh only.,HelloFresh retainer billing
+DG-BOOK-COVER,Book cover design,fixed,400,each,Cover design in Canva revisions and handoff.,One-off creative
+DG-FACIL-DAY,Additional facilitation day,fixed,1800,each,Add-on day for mapping or improvement workshop.,Per-item on mixed proposals

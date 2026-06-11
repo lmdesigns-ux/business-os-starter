@@ -1,0 +1,16 @@
+{
+  "name": "business-os-starter",
+  "private": true,
+  "description": "Business OS starter — portal compile scripts",
+  "scripts": {
+    "sync:invoices": "node skills/parse-invoice-pdfs.js",
+    "sync:moxie": "node skills/sync-moxie-export.js",
+    "sync:portal": "node skills/sync-portal-data.js",
+    "sync:plan": "node skills/sync-plan.js",
+    "sync:all": "node skills/parse-invoice-pdfs.js && node skills/sync-moxie-export.js && node skills/sync-portal-data.js"
+  },
+  "devDependencies": {
+    "pdf-parse": "^2.4.5",
+    "xlsx": "^0.18.5"
+  }
+}

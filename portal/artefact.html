@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Artefact — Business OS</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <script src="data/portal-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/shell-init.js"></script>
+  <style>
+    .artefact-back {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: var(--sp-4);
+    }
+    .artefact-back:hover { text-decoration: underline; }
+
+    .artefact-meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--sp-3);
+      padding: var(--sp-4) var(--sp-5);
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-top: 3px solid var(--layer-inputs);
+      margin-bottom: var(--sp-6);
+    }
+    .artefact-meta-bar .meta-item {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .artefact-meta-bar .external-link {
+      margin-left: auto;
+      font-family: var(--font-display);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      padding: var(--sp-2) var(--sp-4);
+      border: 2px solid var(--accent);
+    }
+    .artefact-meta-bar .external-link:hover { background: var(--accent-light); }
+
+    .artefact-section {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      padding: var(--sp-5) var(--sp-6);
+      margin-bottom: var(--sp-4);
+    }
+    .artefact-section h2 {
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 0 0 var(--sp-4);
+    }
+    .artefact-section-review {
+      border-top: 3px solid var(--layer-knowledge);
+    }
+    .section-body {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .section-body p { margin: 0 0 var(--sp-3); }
+    .section-body ul {
+      margin: 0 0 var(--sp-3);
+      padding-left: 1.25rem;
+    }
+    .section-body li { margin-bottom: var(--sp-1); }
+    .section-body code {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      background: var(--bg-alt);
+      padding: 1px 5px;
+    }
+    .code-block {
+      background: var(--bg-alt);
+      padding: var(--sp-4);
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      margin: 0 0 var(--sp-3);
+    }
+    .mermaid-wrap {
+      margin: var(--sp-4) 0;
+      padding: var(--sp-4);
+      background: var(--bg-alt);
+      overflow-x: auto;
+    }
+
+    .artefact-empty,
+    .artefact-loading {
+      text-align: center;
+      padding: var(--sp-8);
+      border: 2px dashed var(--border-light);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    .artefact-empty code,
+    .artefact-loading code {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      background: var(--bg-alt);
+      padding: 2px 6px;
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <nav id="site-nav" class="site-nav" aria-label="Main navigation"></nav>
+  <div class="app-main">
+    <div class="app-top-bar">
+      <button type="button" id="nav-toggle" class="nav-drawer-toggle" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-drawer-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <span class="top-bar-title" id="top-bar-title">Artefact</span>
+    </div>
+    <button type="button" id="nav-overlay" class="app-overlay" hidden aria-label="Close menu"></button>
+    <main class="page" id="main-content">
+
+      <a href="artefacts.html" class="artefact-back">← All artefacts</a>
+
+      <div class="page-header">
+        <h1 id="artefact-title">Loading…</h1>
+      </div>
+
+      <div id="artefact-root">
+        <div class="artefact-loading">Loading artefact…</div>
+      </div>
+
+      <footer class="site-footer">
+        <p><span id="footer-brand">Your Business</span> · Workshop · <span id="footer-date"></span></p>
+      </footer>
+    </main>
+  </div>
+</div>
+<script src="js/site-nav.js"></script>
+<script src="js/artefact-render.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+(function () {
+  var R = window.ArtefactRender;
+  var D = window.PortalData;
+  var site = D.site || {};
+  document.getElementById('footer-brand').textContent = site.name || 'Your Business';
+  document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('id');
+  var root = document.getElementById('artefact-root');
+  var titleEl = document.getElementById('artefact-title');
+  var topBar = document.getElementById('top-bar-title');
+
+  if (!id) {
+    root.innerHTML = '<div class="artefact-empty"><p>No artefact specified.</p><p>Open from <a href="artefacts.html">Workshop</a> or use <code>?id=your-artefact-id</code>.</p></div>';
+    titleEl.textContent = 'Artefact not found';
+    return;
+  }
+
+  var compiled = (D.artefacts || []).find(function (a) { return a.id === id; });
+  if (!compiled) {
+    root.innerHTML = '<div class="artefact-empty"><p>Artefact <code>' + R.esc(id) + '</code> not in compiled index.</p><p>Run <code>node skills/sync-portal-data.js</code> after adding the file.</p></div>';
+    titleEl.textContent = 'Artefact not found';
+    return;
+  }
+
+  var mdPath = '../inputs/artefacts/' + compiled.path;
+
+  fetch(mdPath)
+    .then(function (res) {
+      if (!res.ok) throw new Error('Could not load ' + mdPath);
+      return res.text();
+    })
+    .then(function (md) {
+      var meta = R.parseJsonFence(md) || compiled;
+      var body = R.bodyAfterFence(md);
+      var sections = R.splitSections(body);
+
+      titleEl.textContent = meta.title || compiled.title;
+      topBar.textContent = meta.title || compiled.title;
+      document.title = (meta.title || compiled.title) + ' — Business OS';
+
+      root.innerHTML = R.renderMetaBar(meta, compiled) + R.renderSections(sections);
+      return R.initMermaid();
+    })
+    .catch(function (err) {
+      root.innerHTML = '<div class="artefact-empty"><p>Could not load artefact.</p><p>' + R.esc(err.message) + '</p><p>Serve from repo root: <code>python3 -m http.server 3333</code></p></div>';
+      titleEl.textContent = 'Error';
+    });
+})();
+</script>
+</body>
+</html>

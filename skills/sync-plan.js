@@ -140,33 +140,40 @@ function injectPlanIntoDataJs(content, plan) {
   throw new Error('Could not find plan markers or recentActivity block in data file. Add /* BEGIN_COMPILED_PLAN */ ... /* END_COMPILED_PLAN */.');
 }
 
-/* ── Run ── */
-if (!fs.existsSync(INPUT_PATH)) {
-  console.error('❌  Missing', INPUT_PATH);
-  console.error('    Create inputs/90-day-plan.md first (see references/ycc-90-day-plan.md).');
-  process.exit(1);
+function runSyncPlan() {
+  if (!fs.existsSync(INPUT_PATH)) {
+    console.error('❌  Missing', INPUT_PATH);
+    console.error('    Create inputs/90-day-plan.md first (see references/ycc-90-day-plan.md).');
+    process.exit(1);
+  }
+
+  if (!fs.existsSync(DATA_PATH)) {
+    console.error('❌  Data file not found:', DATA_PATH);
+    process.exit(1);
+  }
+
+  const rawMd = fs.readFileSync(INPUT_PATH, 'utf8');
+  const plan = parse90DayPlan(rawMd);
+
+  if (!plan.business && !plan.northStar && plan.months.length === 0) {
+    console.error('❌  Parsed plan is empty — check markdown format.');
+    process.exit(1);
+  }
+
+  let dataJs = fs.readFileSync(DATA_PATH, 'utf8');
+  dataJs = injectPlanIntoDataJs(dataJs, plan);
+  fs.writeFileSync(DATA_PATH, dataJs, 'utf8');
+
+  console.log('✅  Plan synced to', path.relative(process.cwd(), DATA_PATH));
+  console.log('   Business:', plan.business || '(—)');
+  console.log('   Period:  ', plan.period || '(—)');
+  console.log('   Milestones:', plan.stats.done + '/' + plan.stats.total, 'complete');
+  console.log('');
+  console.log('   Reload planning.html or index.html to see updates.');
 }
 
-if (!fs.existsSync(DATA_PATH)) {
-  console.error('❌  Data file not found:', DATA_PATH);
-  process.exit(1);
+if (require.main === module) {
+  runSyncPlan();
 }
 
-const rawMd = fs.readFileSync(INPUT_PATH, 'utf8');
-const plan = parse90DayPlan(rawMd);
-
-if (!plan.business && !plan.northStar && plan.months.length === 0) {
-  console.error('❌  Parsed plan is empty — check markdown format.');
-  process.exit(1);
-}
-
-let dataJs = fs.readFileSync(DATA_PATH, 'utf8');
-dataJs = injectPlanIntoDataJs(dataJs, plan);
-fs.writeFileSync(DATA_PATH, dataJs, 'utf8');
-
-console.log('✅  Plan synced to', path.relative(process.cwd(), DATA_PATH));
-console.log('   Business:', plan.business || '(—)');
-console.log('   Period:  ', plan.period || '(—)');
-console.log('   Milestones:', plan.stats.done + '/' + plan.stats.total, 'complete');
-console.log('');
-console.log('   Reload planning.html or index.html to see updates.');
+module.exports = { parse90DayPlan, injectPlanIntoDataJs, formatPlanBlock, runSyncPlan };

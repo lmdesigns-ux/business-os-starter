@@ -1,0 +1,6 @@
+node_modules/
+operations/moxie/exports/*.xlsx
+operations/moxie/exports/*.csv
+operations/moxie/invoices/*.pdf
+operations/moxie/invoice-detail.json
+.DS_Store

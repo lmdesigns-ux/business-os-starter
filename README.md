@@ -52,9 +52,12 @@ Visit `http://localhost:3333/portal/index.html` (adjust path if you served from 
 
 | Page | What it is |
 |------|------------|
-| `portal/index.html` | Dashboard |
+| `portal/index.html` | Dashboard (Moxie metrics when synced) |
+| `portal/pipeline.html` | Opportunities and clients (from Moxie export) |
 | `portal/canvas.html` | Business overview — your single source of truth (from `inputs/business-model-canvas.md`) |
 | `portal/planning.html` | 90-day planning view (compiled from markdown) |
+| `portal/artefacts.html` | Workshop library — outlines and process maps (from `inputs/artefacts/`) |
+| `portal/artefact.html?id=…` | Single artefact detail — Mermaid maps, external links, review notes |
 
 ### 90-day planning
 
@@ -65,6 +68,16 @@ node skills/sync-plan.js
 ```
 
 Reload `portal/planning.html`.
+
+### Workshop artefacts
+
+Draft workshop outlines and process maps under `inputs/artefacts/`. Templates: `references/workshop-outline-template.md` and `references/process-map-template.md`.
+
+```bash
+node skills/sync-portal-data.js
+```
+
+Open `portal/artefacts.html`. For AI feedback on design and content, say **`review artefact`** in chat.
 
 ---
 
@@ -82,6 +95,27 @@ If you’re inside the workshop monorepo, open **`../references/`** from `templa
 - `bmc-template.md` — blank BMC
 - `ycc-example-bmc.md` — fictional Yeast Coast Culture example
 - `ycc-90-day-plan.md` — 90-day markdown schema + example
+
+---
+
+## Operations (Moxie)
+
+Design Grove uses [Moxie](https://www.withmoxie.com) for clients, projects, and invoicing. Implementation guides and templates live in [`operations/moxie/`](operations/moxie/README.md) (product library, HelloFresh merge, project templates, pipeline cleanup).
+
+**Refresh the portal from a Moxie export**
+
+1. Drop `Workspace-Export.xlsx` in `operations/moxie/exports/`.
+2. Run:
+
+```bash
+npm install
+node skills/sync-moxie-export.js
+node skills/sync-portal-data.js
+```
+
+3. Reload `portal/index.html` and `portal/pipeline.html`.
+
+Sources of truth: `inputs/dashboard.md`, `inputs/pipeline.md`, and `inputs/90-day-plan.md` (plan only — use `node skills/sync-plan.js` when the plan markdown changes alone).
 
 ---
 

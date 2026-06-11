@@ -1,0 +1,33 @@
+{
+  "exported": "2026-06-10",
+  "source": "Workspace-Export (1).xlsx",
+  "metrics": {
+    "revenue_mtd": 0,
+    "revenue_target": 10000,
+    "pipeline_value": 3200,
+    "prospects_count": 2,
+    "prospects_goal": 10,
+    "active_projects": 12,
+    "retainer_hours_qtd": 2221956,
+    "hf_forecast_monthly": 420,
+    "hf_revenue_qtd": 698,
+    "invoice_pdf_count": 17
+  },
+  "retainer": {
+    "hours_logged_qtd": 2221956,
+    "hours_billed_qtd": 15.5,
+    "revenue_by_project": {
+      "DIY Program": 427.5,
+      "UX Research Ad Hoc": 270,
+      "Competitor Tracker": 0,
+      "Deep Dives": 0
+    },
+    "effective_rate": 45,
+    "hf_revenue_qtd": 698,
+    "hours_divergence_pct": 100,
+    "source": "Moxie export + invoice PDFs"
+  },
+  "opportunity_count": 4,
+  "client_count": 8,
+  "invoice_pdf_count": 17
+}

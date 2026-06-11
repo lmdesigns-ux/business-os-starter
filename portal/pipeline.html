@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FAF8F3">
+  <title>Pipeline — Business OS</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <script src="data/portal-data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/shell-init.js"></script>
+  <style>
+    .pipeline-tabs {
+      display: flex;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-6);
+      flex-wrap: wrap;
+    }
+    .pipeline-tabs button {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      padding: var(--sp-2) var(--sp-4);
+      border: 1px solid var(--border-light);
+      background: var(--surface);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .pipeline-tabs button.is-active {
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .pipeline-panel { display: none; }
+    .pipeline-panel.is-visible { display: block; }
+
+    .status-meeting   { background: var(--status-in-progress-bg); color: var(--status-in-progress); }
+    .status-proposal  { background: var(--status-in-progress-bg); color: var(--status-in-progress); }
+    .status-won       { background: var(--status-launched-bg);    color: var(--status-launched); }
+    .status-lost      { background: var(--status-blocked-bg);     color: var(--status-blocked); }
+    .status-active    { background: var(--status-complete-bg);    color: var(--status-complete); }
+    .status-prospect  { background: var(--status-in-progress-bg); color: var(--status-in-progress); }
+    .status-archived  { background: var(--bg-alt); color: var(--text-muted); }
+
+    .sku-chip {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      padding: 2px 5px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-alt);
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .retainer-card {
+      margin-bottom: var(--sp-8);
+      padding: var(--sp-5);
+      border: 1px solid var(--border-light);
+      background: var(--surface);
+    }
+    .retainer-card h2 {
+      margin: 0 0 var(--sp-2);
+      font-size: 1rem;
+    }
+    .retainer-meta {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-bottom: var(--sp-4);
+    }
+    .retainer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-4);
+    }
+    .retainer-stat-label {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: var(--sp-1);
+    }
+    .retainer-stat-value {
+      font-family: var(--font-mono);
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    .retainer-warn {
+      color: var(--status-blocked);
+      font-size: 0.8125rem;
+      margin-top: var(--sp-2);
+    }
+    .project-bars { margin-top: var(--sp-3); }
+    .project-bar-row {
+      display: grid;
+      grid-template-columns: 9rem 1fr 4rem;
+      gap: var(--sp-2);
+      align-items: center;
+      font-size: 0.8125rem;
+      margin-bottom: var(--sp-2);
+    }
+    .project-bar-track {
+      height: 6px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border-light);
+    }
+    .project-bar-fill {
+      height: 100%;
+      background: var(--accent);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <nav id="site-nav" class="site-nav" aria-label="Main navigation"></nav>
+  <div class="app-main">
+    <div class="app-top-bar">
+      <button type="button" id="nav-toggle" class="nav-drawer-toggle" aria-label="Open menu" aria-expanded="false">
+        <span class="nav-drawer-toggle-bars" aria-hidden="true"></span>
+      </button>
+      <span class="top-bar-title">Pipeline</span>
+    </div>
+    <button type="button" id="nav-overlay" class="app-overlay" hidden aria-label="Close menu"></button>
+    <main class="page" id="main-content">
+
+      <div class="page-header">
+        <h1>Pipeline</h1>
+        <p class="tagline" id="pipeline-tagline">Opportunities and clients from Moxie.</p>
+        <div class="meta-row" id="pipeline-meta"></div>
+      </div>
+
+      <div id="retainer-card" class="retainer-card" hidden>
+        <h2>HelloFresh retainer</h2>
+        <p class="retainer-meta" id="retainer-source"></p>
+        <div class="retainer-grid" id="retainer-stats"></div>
+        <div class="project-bars" id="retainer-projects"></div>
+        <p class="retainer-warn" id="retainer-warn" hidden></p>
+      </div>
+
+      <div class="pipeline-tabs" role="tablist" aria-label="Pipeline views">
+        <button type="button" class="is-active" data-panel="opportunities" role="tab" aria-selected="true">Opportunities</button>
+        <button type="button" data-panel="clients" role="tab" aria-selected="false">Clients</button>
+      </div>
+
+      <div id="panel-opportunities" class="pipeline-panel is-visible" role="tabpanel">
+        <div class="filter-row" id="opp-filters">
+          <button class="filter-btn is-active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="open">Open</button>
+          <button class="filter-btn" data-filter="won">Won</button>
+          <button class="filter-btn" data-filter="lost">Lost</button>
+        </div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Opportunity</th>
+                <th>Client</th>
+                <th>Stage</th>
+                <th>Value</th>
+                <th>SKU</th>
+                <th>Lead source</th>
+                <th>Last activity</th>
+              </tr>
+            </thead>
+            <tbody id="opp-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="panel-clients" class="pipeline-panel" role="tabpanel" hidden>
+        <div class="filter-row" id="client-filters">
+          <button class="filter-btn is-active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="active">Active</button>
+          <button class="filter-btn" data-filter="prospect">Prospect</button>
+          <button class="filter-btn" data-filter="archived">Archived</button>
+        </div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Active projects</th>
+                <th>Revenue YTD</th>
+                <th>Primary SKU</th>
+              </tr>
+            </thead>
+            <tbody id="client-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <footer class="site-footer">
+        <p><span id="footer-brand">Your Business</span> · Pipeline · synced from Moxie + invoice PDFs</p>
+      </footer>
+    </main>
+  </div>
+</div>
+<script src="js/site-nav.js"></script>
+<script>
+(function () {
+  var D = window.PortalData || {};
+  var opps = D.opportunities || [];
+  var clients = D.clients || [];
+  var retainer = D.retainer || null;
+
+  function esc(s) {
+    var el = document.createElement('span');
+    el.textContent = String(s == null ? '' : s);
+    return el.innerHTML;
+  }
+
+  function fmtMoney(n) {
+    if (n == null || n === 0) return '—';
+    return '$' + Number(n).toLocaleString('en-US');
+  }
+
+  function isOpenStage(stage) {
+    return stage === 'meeting' || stage === 'proposal' || stage === 'open';
+  }
+
+  var openOpps = opps.filter(function (o) { return isOpenStage(o.stage); });
+  var pipelineValue = openOpps.reduce(function (s, o) { return s + (o.value > 0 ? o.value : 0); }, 0);
+  var activeClients = clients.filter(function (c) { return c.status === 'active'; }).length;
+
+  document.getElementById('footer-brand').textContent = (D.site && D.site.name) || 'Your Business';
+  document.getElementById('pipeline-meta').innerHTML =
+    '<span><strong>' + openOpps.length + ' open opportunities</strong></span>'
+    + '<span>' + fmtMoney(pipelineValue) + ' pipeline</span>'
+    + '<span>' + activeClients + ' active clients</span>';
+
+  function renderOpps(filter) {
+    var rows = opps.filter(function (o) {
+      if (filter === 'all') return true;
+      if (filter === 'open') return isOpenStage(o.stage);
+      if (filter === 'won') return o.stage === 'won';
+      if (filter === 'lost') return o.stage === 'lost';
+      return true;
+    });
+    document.getElementById('opp-body').innerHTML = rows.length
+      ? rows.map(function (o) {
+          return '<tr>'
+            + '<td><strong>' + esc(o.name) + '</strong></td>'
+            + '<td>' + esc(o.client) + '</td>'
+            + '<td><span class="badge status-' + esc(o.stage) + '">' + esc(o.stage) + '</span></td>'
+            + '<td class="mono">' + fmtMoney(o.value) + '</td>'
+            + '<td><span class="sku-chip">' + esc(o.sku) + '</span></td>'
+            + '<td>' + esc(o.lead_source) + '</td>'
+            + '<td class="mono">' + esc(o.last_activity) + '</td>'
+            + '</tr>';
+        }).join('')
+      : '<tr><td colspan="7" class="meta">No opportunities — run sync after adding a Moxie export.</td></tr>';
+  }
+
+  function renderClients(filter) {
+    var rows = clients.filter(function (c) {
+      return filter === 'all' || c.status === filter;
+    });
+    document.getElementById('client-body').innerHTML = rows.length
+      ? rows.map(function (c) {
+          return '<tr>'
+            + '<td><strong>' + esc(c.name) + '</strong></td>'
+            + '<td><span class="badge status-' + esc(c.status) + '">' + esc(c.status) + '</span></td>'
+            + '<td>' + esc(c.type) + '</td>'
+            + '<td class="mono">' + (c.active_projects != null ? c.active_projects : '—') + '</td>'
+            + '<td class="mono">' + fmtMoney(c.revenue_ytd) + '</td>'
+            + '<td><span class="sku-chip">' + esc(c.primary_sku) + '</span></td>'
+            + '</tr>';
+        }).join('')
+      : '<tr><td colspan="6" class="meta">No clients — run sync after adding a Moxie export.</td></tr>';
+  }
+
+  function renderRetainer(r) {
+    var card = document.getElementById('retainer-card');
+    if (!r) {
+      card.hidden = true;
+      return;
+    }
+    card.hidden = false;
+    document.getElementById('retainer-source').textContent = r.source || 'Moxie export';
+    var billed = r.hours_billed_qtd;
+    var logged = r.hours_logged_qtd;
+    var stats = [
+      { label: 'Hours logged (QTD)', value: logged != null ? logged + 'h' : '—' },
+      { label: 'Hours billed (QTD)', value: billed != null ? billed + 'h' : '—' },
+      { label: 'Effective rate', value: r.effective_rate != null ? '$' + r.effective_rate + '/hr' : '—' },
+      { label: 'HF revenue (QTD)', value: fmtMoney(r.hf_revenue_qtd) }
+    ];
+    document.getElementById('retainer-stats').innerHTML = stats.map(function (s) {
+      return '<div><div class="retainer-stat-label">' + esc(s.label) + '</div>'
+        + '<div class="retainer-stat-value">' + esc(s.value) + '</div></div>';
+    }).join('');
+
+    var projects = r.revenue_by_project || {};
+    var entries = Object.keys(projects).map(function (k) { return { name: k, amount: projects[k] || 0 }; });
+    var maxRev = Math.max.apply(null, entries.map(function (e) { return e.amount; }).concat([1]));
+    var hasRev = entries.some(function (e) { return e.amount > 0; });
+    document.getElementById('retainer-projects').innerHTML = hasRev
+      ? '<div class="retainer-stat-label">Revenue by project (QTD)</div>'
+        + entries.map(function (e) {
+            var pct = Math.round((e.amount / maxRev) * 100);
+            return '<div class="project-bar-row">'
+              + '<span>' + esc(e.name) + '</span>'
+              + '<div class="project-bar-track"><div class="project-bar-fill" style="width:' + pct + '%"></div></div>'
+              + '<span class="mono">' + fmtMoney(e.amount) + '</span>'
+              + '</div>';
+          }).join('')
+      : '<p class="meta" style="margin:0;font-size:0.8125rem;">No HelloFresh invoice PDFs in the current quarter yet — add QTD PDFs to <code>operations/moxie/invoices/</code> and run <code>npm run sync:all</code>.</p>';
+
+    var warnEl = document.getElementById('retainer-warn');
+    if (r.hours_divergence_pct != null && Math.abs(r.hours_divergence_pct) > 10) {
+      warnEl.hidden = false;
+      warnEl.textContent = 'Logged vs billed hours differ by ' + Math.abs(r.hours_divergence_pct) + '% — review time tags or billing.';
+    } else {
+      warnEl.hidden = true;
+    }
+  }
+
+  renderRetainer(retainer);
+  renderOpps('all');
+  renderClients('all');
+
+  document.querySelector('.pipeline-tabs').addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-panel]');
+    if (!btn) return;
+    document.querySelectorAll('.pipeline-tabs button').forEach(function (b) {
+      b.classList.remove('is-active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('is-active');
+    btn.setAttribute('aria-selected', 'true');
+    var panel = btn.dataset.panel;
+    document.querySelectorAll('.pipeline-panel').forEach(function (p) {
+      var show = p.id === 'panel-' + panel;
+      p.classList.toggle('is-visible', show);
+      p.hidden = !show;
+    });
+  });
+
+  document.getElementById('opp-filters').addEventListener('click', function (e) {
+    var btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('#opp-filters .filter-btn').forEach(function (b) { b.classList.remove('is-active'); });
+    btn.classList.add('is-active');
+    renderOpps(btn.dataset.filter);
+  });
+
+  document.getElementById('client-filters').addEventListener('click', function (e) {
+    var btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('#client-filters .filter-btn').forEach(function (b) { b.classList.remove('is-active'); });
+    btn.classList.add('is-active');
+    renderClients(btn.dataset.filter);
+  });
+})();
+</script>
+</body>
+</html>
